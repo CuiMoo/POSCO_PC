@@ -207,7 +207,7 @@ window.bind('<F1>',HistoryWindow)
 def Ent3(window,text,font=('Bahnschrift',15)):
     V_strvar = StringVar()
     T = Label(window,text=text,font=(None,15)).pack()
-    E = ttk.Entry(window,textvariable=V_strvar,font=font)
+    E = ttk.Entry(window,textvariable=V_strvar,font=font,justify='center')
     return E,T,V_strvar
 
 
@@ -223,20 +223,85 @@ def Ent3(window,text,font=('Bahnschrift',15)):
 F21 = Frame(T2)   #Frame  on the tab no.2
 F21.place(x=50,y=50)
 
+v_membercode = StringVar()
+v_membercode.set('M-1001')
+L = Label(T2,text='Member ID',font=(None,10)).place(x=50,y=20)
+LCode = Label(T2,textvariable=v_membercode,font=(None,13)).place(x=150,y=20)
+
+
 E21,L,v_fullname = Ent3(F21,'Full Name')
-E21.pack()
+E21.pack() 
 
 E22,L,v_tel = Ent3(F21,'Tel. Number')
 E22.pack()
 
 E23,L,v_userType =Ent3(F21,'Member Type')
 E23.pack()
+v_userType.set('General')
 
-E24,L,v_userType =Ent3(F21,'Points')
+E24,L,v_points =Ent3(F21,'Points')
 E24.pack()
+v_points.set('0')  #insert a defualt data of points 
+
+
+def SaveMember():
+    code = v_membercode.get()
+    fullName = v_fullname.get()
+    tel = v_tel.get()
+    userType = v_userType.get()
+    points = v_points.get()
+    print(fullName,tel,userType,points)
+    writeToCSV([code,fullName,tel,userType,points],'member.csv')  # save a member
+    table_member.insert('',0,value=[code,fullName,tel,userType,points])
+
 
 # E23.bind('<Return>',lambda x: print(v_userType.get()))
+B = ttk.Button(F21,text='Save',command=SaveMember)
+B.pack()
 
 
+###########--Table for member showing--############
+F21= Frame(T2)
+F21.place(x=700,y=100) # position
+
+header = ['Code','Name','Tel','Memer Type','Points']
+hwidth = [50,200,100,100,100]
+
+table_member = ttk.Treeview(F21,columns = header,show='headings',height=15)
+table_member.pack()
+
+for hd,hw in zip(header,hwidth):
+    table_member.column(hd,width=hw)
+    table_member.heading(hd,text=hd)
+
+
+# Delete data in the selected table
+
+def DeleteMember(event):
+    select = table_member.selection() #select item
+    data = table_member.item(select)['values']
+    print(data)
+
+table_member.bind('<Delete>',DeleteMember)
+
+#Update Table
+
+allMember ={}
+
+
+def UpdateTable_Member():
+    #Update from CSV
+    with open('member.csv', newline='',encoding='utf-8') as file:
+        fr = csv.reader(file) #file reader
+        table_member.delete(*table_member.get_children())
+        for row in fr:
+            table_member.insert('',0,values=row)
+            code = row[0] #get 
+            allMember[code] = row
+    print(allMember)
+
+
+
+UpdateTable_Member()
 
 window.mainloop()
