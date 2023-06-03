@@ -2,7 +2,73 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 from productdb import *
-class Addmember:
+
+
+class ProductIcon:
+    def __init__(self):
+        self.quantity = None
+        self.table_product = None
+        self.v_radio = None
+        
+    def popup(self):
+        #PGUI = Product GUI
+        PGUI = Toplevel()
+        PGUI.geometry('500x500')
+        PGUI.title('Setting ---> Show product item icon')
+        
+        header = ['ID','Item code', 'Item title', 'Icon']
+        hwidth = [50,70,200,70]
+
+        self.table_product = ttk.Treeview(PGUI,columns=header, show='headings',height=15)
+        self.table_product.pack()
+
+        for hd,hw in zip(header,hwidth):
+            self.table_product.column(hd,width=hw)
+            self.table_product.heading(hd,text=hd)
+        
+        self.table_product.bind('<Double-1>',self.change_status)
+        self.insert_table()    
+        PGUI.mainloop()
+        
+    def insert_table(self):
+        data = View_product_table_icon()
+        print(data)
+        for d in data:
+            row = list(d) #convert tuple to list for data editting
+            row.append('✔')
+            self.table_product.insert('','end',value=row)
+            
+    def change_status(self,event=None):
+        select = self.table_product.selection()
+        pid = self.table_product.item(select)['values'][0]
+        print('PID:',pid)
+        SGUI = Toplevel() #SGUI = status GUI
+        SGUI.geometry('400x400')
+        self.v_radio = StringVar()
+        #radio button
+        RB1 = ttk.Radiobutton(SGUI,text= 'Show icon',variable=self.v_radio,value='show',
+                              command=lambda x=None: insert_product_status(int(pid),'show'))
+        RB1.pack()
+        RB2 = ttk.Radiobutton(SGUI,text='No showing',variable=self.v_radio,value='',
+                              command=lambda x=None: insert_product_status(int(pid),''))
+        RB2.pack()
+        RB1.invoke() #set defualt of radio
+        # Drop down
+        dropdown = ttk.Combobox(SGUI,values=['Show icon','No showing'])
+        dropdown.pack()
+        dropdown.set('Show icon')
+        dropdown.bind('<<ComboboxSelected>>',lambda x =None: print(dropdown.get()))
+        
+        SGUI.mainloop()
+    
+    def command(self):
+        self.popup()
+
+
+
+
+
+class AddProduct:
     def __init__(self):
         self.v_productid = None
         self.v_title = None
@@ -71,5 +137,5 @@ class Addmember:
         self.popup()
         
 if __name__ =='__main__':
-    test = Addmember()
+    test = AddProduct()
         

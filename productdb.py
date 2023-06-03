@@ -11,6 +11,43 @@ c.execute("""CREATE TABLE IF NOT EXISTS product(
                 price REAL,
                 image TEXT)""")
 
+c.execute("""CREATE TABLE IF NOT EXISTS product_status(
+                ID  INTEGER PRIMARY KEY AUTOINCREMENT,
+                product_id INTEGER,
+                status TEXT)""")
+
+
+def insert_product_status(pid,status):
+    #pid = product id
+    check = View_product_status(pid)
+    if check == None:     
+        with conn:
+            command = 'INSERT INTO product_status VALUES(?,?,?)'
+            c.execute(command,(None,pid,status))
+        conn.commit()
+        print('status saved')
+    else:
+        print('pid exist!')
+        print(check)
+        Update_product_status(pid,status)
+    
+def View_product_status(pid):
+    # READ
+    with conn:
+        command = 'SELECT * FROM  product_status WHERE product_id=(?)'
+        c.execute(command,([pid]))
+        result = c.fetchone() # fetch(all) get all, fetch(one) get a data , fetch(many) get a handful
+    return result 
+    
+def Update_product_status(pid,status):
+    #UPDATE
+    with conn:
+        command = 'UPDATE product_status SET status = (?) WHERE ID =(?)'
+        c.execute(command,([status,pid]))
+    conn.commit()
+    print('updated:',pid,status)
+
+
 def Insert_product(productid,title,price,image):
     with conn:
         command = 'INSERT INTO product VALUES (?,?,?,?,?)' #sql command  NUMBER OF ? IS NUMBER OF DATA ,INCLUDING ID
@@ -27,6 +64,15 @@ def View_product():
     print(result)
     return result  
 
+def View_product_table_icon(): #select partial of DB
+    # READ
+    with conn:
+        command = 'SELECT ID, productid, title FROM  product'
+        c.execute(command)
+        result = c.fetchall() # fetch(all) get all, fetch(one) get a data , fetch(many) get a handful
+    print(result)
+    return result  
+
 def View_product_single(productid):
     # READ
     with conn:
@@ -37,6 +83,9 @@ def View_product_single(productid):
     return result 
 
 if __name__ == '__main__':
-    Insert_product('CF-002','expresso',45,r'C:\image\espresso.png')
-    View_product()
-        
+    # 
+    # insert_product_status('CF-1002','esspesso',45,r'C:\image\latte.png')
+    # View_product()
+    # View_product_table_icon()
+    #insert_product_status(1,'show')
+    print(View_product_status(2))
