@@ -89,51 +89,55 @@ class AddProduct:
         self.v_title = None
         self.v_price = None
         self.v_imagepath = None
+        self.MGUI = None
         
     def popup(self):
-        MGUI = Toplevel()
-        MGUI.geometry('500x600')
-        MGUI.title('Add Product')
+        self.MGUI = Toplevel()
+        self.MGUI.geometry('500x600')
+        self.MGUI.title('Add Product')
         
         self.v_productid = StringVar()
         self.v_title = StringVar()
         self.v_price = StringVar()
         self.v_imagepath = StringVar()
         
-        L = Label(MGUI,text='Add product',font=(None,30))
+        L = Label(self.MGUI,text='Add product',font=(None,30))
         L.pack(pady=20)
         
-        L = Label(MGUI,text='Product ID',font=(None,20)).pack()
-        E1 = ttk.Entry(MGUI,textvariable=self.v_productid,font=(None,20))
+        L = Label(self.MGUI,text='Product ID',font=(None,20)).pack()
+        E1 = ttk.Entry(self.MGUI,textvariable=self.v_productid,font=(None,20))
         E1.pack(pady=10)
         
-        L = Label(MGUI,text='Product Name',font=(None,20)).pack()
-        E2 = ttk.Entry(MGUI,textvariable=self.v_title,font=(None,20))
+        L = Label(self.MGUI,text='Product Name',font=(None,20)).pack()
+        E2 = ttk.Entry(self.MGUI,textvariable=self.v_title,font=(None,20))
         E2.pack(pady=10)
         
-        L = Label(MGUI,text='Price',font=(None,20)).pack()
-        E3 = ttk.Entry(MGUI,textvariable=self.v_price,font=(None,20))
+        L = Label(self.MGUI,text='Price',font=(None,20)).pack()
+        E3 = ttk.Entry(self.MGUI,textvariable=self.v_price,font=(None,20))
         E3.pack(pady=10)
         
-        L = Label(MGUI,textvariable=self.v_imagepath).pack()
+        L = Label(self.MGUI,textvariable=self.v_imagepath).pack()
         
-        Bselect = ttk.Button(MGUI,text='Picture select ( 50 x 50 px)',command=self.selectfile)
+        Bselect = ttk.Button(self.MGUI,text='Picture select ( 50 x 50 px)',command=self.selectfile)
         Bselect.pack(pady=10)
         
-        Bsave = ttk.Button(MGUI,text='Save',command=self.saveproduct)
+        Bsave = ttk.Button(self.MGUI,text='Save',command=self.saveproduct)
         Bsave.pack(pady=10,ipadx=20,ipady=10)
         
         
         
-        MGUI.mainloop()
+        self.MGUI.mainloop()
         
     def selectfile(self):
+        #self.MGUI.lift()
         filetypes = (
                 ('PNG','*.png'),
                 ('All files','*.*')
             )
         select = filedialog.askopenfilename(title='Picture select file',initialdir='/',filetypes=filetypes)
         self.v_imagepath.set(select)
+        self.MGUI.focus_force()  #after select the add product page path then freez the window above on main window
+        self.MGUI.grab_set() # same as above
         
     def saveproduct(self):
         v1 = self.v_productid.get()

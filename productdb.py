@@ -93,13 +93,21 @@ def product_icon():
     with conn:
         command = 'SELECT * FROM  product'
         c.execute(command)
-        result = c.fetchall()
+        product = c.fetchall()
     with conn:
         command = "SELECT * FROM product_status WHERE status ='show'"
         c.execute(command)
         status = c.fetchall()
-    print('R',result)
-    print('S',status)
+    result = []
+
+    for s in status:
+        for p in product:
+            if s[1] == p[0]:
+                print(p,s[-1])
+                result.append(p)
+    
+    print(result)
+
 
 if __name__ == '__main__':
     product_icon()
