@@ -52,4 +52,3 @@ def Delete_member(ID):
 #View_member()
 if __name__ == '__main__':
      Insert_member('MB-1001','somchai kengmark','08318555','general',100)
-

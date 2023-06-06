@@ -31,34 +31,49 @@ class ProductIcon:
         PGUI.mainloop()
         
     def insert_table(self):
+        self.table_product.delete(*self.table_product.get_children()) 
         data = View_product_table_icon()
         print(data)
         for d in data:
-            row = list(d) #convert tuple to list for data editting
-            row.append('✔')
+            row = list(d) #convert tuple to list for data editting               
+            check = View_product_status(row[0])
+            #Show status of showing symbol
+            if check[-1] == 'show':
+                row.append('✔')
             self.table_product.insert('','end',value=row)
             
     def change_status(self,event=None):
         select = self.table_product.selection()
         pid = self.table_product.item(select)['values'][0]
-        print('PID:',pid)
+        # print('PID:',pid)
         SGUI = Toplevel() #SGUI = status GUI
-        SGUI.geometry('400x400')
+        SGUI.geometry('400x100')
         self.v_radio = StringVar()
         #radio button
         RB1 = ttk.Radiobutton(SGUI,text= 'Show icon',variable=self.v_radio,value='show',
                               command=lambda x=None: insert_product_status(int(pid),'show'))
-        RB1.pack()
+        RB1.pack(pady=20)
         RB2 = ttk.Radiobutton(SGUI,text='No showing',variable=self.v_radio,value='',
                               command=lambda x=None: insert_product_status(int(pid),''))
         RB2.pack()
-        RB1.invoke() #set defualt of radio
-        # Drop down
-        dropdown = ttk.Combobox(SGUI,values=['Show icon','No showing'])
-        dropdown.pack()
-        dropdown.set('Show icon')
-        dropdown.bind('<<ComboboxSelected>>',lambda x =None: print(dropdown.get()))
+        # RB1.invoke() #set defualt of radio
+        check = View_product_status(pid)
+        print('CHECK:',check)
+        if check[-1] == 'show':
+            RB1.invoke()
+        else:
+            RB2.invoke()
         
+        # Drop down
+        # dropdown = ttk.Combobox(SGUI,values=['Show icon','No showing'])
+        # dropdown.pack()
+        # dropdown.set('Show icon')
+        # dropdown.bind('<<ComboboxSelected>>',lambda x =None: print(dropdown.get()))
+        def check_close():
+            print('closed')
+            SGUI.destroy()  #close popup window
+            self.insert_table()
+        SGUI.protocol('WM_DELETE_WINDOW',check_close)
         SGUI.mainloop()
     
     def command(self):

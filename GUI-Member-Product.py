@@ -147,6 +147,19 @@ def AddMenu(name='latte'):
 
 
 
+row =0
+column = 0
+column_quan =3 # adjust this value for number of column
+for i,(k,v) in enumerate(product.items()):
+    if column == column_quan:
+        column = 0
+        row +=1
+    B = ttk.Button(CF1,text=v['name'],image=icon_tab3,compound='top')
+    B.configure(command=lambda m =k:AddMenu(m))
+    B.grid(row=row,column=column)
+    column +=1
+
+'''
 B = ttk.Button(CF1,text='ลาเต้',image=icon_tab3,compound='top',command=lambda m='latte': AddMenu(m))
 B.grid(row=0,column=0,ipadx=20,ipady=10)
 B = ttk.Button(CF1,text='คาปูชิโน',image=icon_tab3,compound='top',command=lambda m='cappuccino': AddMenu(m))
@@ -162,7 +175,7 @@ B.grid(row=1,column=1,ipadx=20,ipady=10)
 B = ttk.Button(CF1,text='ชาร้อน',image=icon_tab3,compound='top',command=lambda m='hottea': AddMenu(m))
 B.grid(row=1,column=2,ipadx=20,ipady=10)
 
-
+'''
 
 
 ######TABLE#######
