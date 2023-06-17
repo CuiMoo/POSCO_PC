@@ -1,11 +1,12 @@
 from tkinter import *
 from tkinter import ttk,messagebox
 from colorDisplay import *
-from functionMgr import *
+
 
 class App:
     def __init__(self):
         #initial data
+    
         self.root = Tk()
         self.root.geometry('1000x750')
         self.root.title('Resistor calculator')
@@ -17,27 +18,13 @@ class App:
         
         
         oDisplay = colorDisplay(self.root)
-        oDisplay.colorDraw('red','brown','blue','yellow')
+        oDisplay.colorDraw()
+
         
-        #--------color choosing tab frame--------------------#
-        self.colorChooseTab = Frame(self.root,width=500,height=50)
-        self.colorChooseTab.pack(pady=10)
         
-        #--------color choosing menu frame--------------------#
-        self.colorChooseMenu = Frame(self.root,width=500,height=50)
-        self.colorChooseMenu.pack()
+        oDisplay.colorButtonDraw()
           
-        #strip Selectlor
-        oDisplay.stripColor(self.colorChooseMenu,'yellow','yellow','yellow','yellow')
-  
-        #--------color button menu tab--------------------#
-        oColorMgr =colorMgr()
-        oColorMgr.colorChoosingMenu(self.colorChooseTab)
-        print(oColorMgr.colorList)
-        
-        
-        
-        
+          
         self.root.mainloop()
 
 if __name__ == '__main__':
