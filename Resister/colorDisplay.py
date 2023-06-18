@@ -4,10 +4,11 @@ from tkinter import ttk,messagebox
 
 class colorDisplay():
     def __init__(self,frame):
+        self.bodyColor ='#e6aa5c'
         self.colorList = {'black':{'color':'black','value':'0','power':1},
-                          'brown':{'color':'brown','value':'1','power':10},
+                          'brown':{'color':'saddlebrown','value':'1','power':10},
                           'red':{'color':'red','value':'2','power':100},
-                          'orange':{'color':'orange','value':'3','power':1_000},
+                          'orange':{'color':'dark orange','value':'3','power':1_000},
                           'yellow':{'color':'yellow','value':'4','power':10_000},
                           'green':{'color':'green','value':'5','power':100_000},
                           'blue':{'color':'blue','value':'6','power':1_000_000},
@@ -15,18 +16,34 @@ class colorDisplay():
                           'grey':{'color':'grey','value':'8','power':100_000_000},
                           'white':{'color':'white','value':'9','power':1_000_000_000},
                           }
-        self.colorUse = ['red','red','orange','yellow']        
-
-        self.canvas = Canvas(frame,width=500,height=300)
-        self.canvas.pack(pady=10)
-        #resistor leg
-        self.canvas.create_polygon([0,240,500,240,500,260,0,260],fill='grey',outline='white')
-        #resistor body
-        self.canvas.create_polygon([100,200,400,200,400,300,100,300],fill='#e8be64')
         
-                #--------color choosing tab frame--------------------#
+        self.colorTolerance ={'brown':{'color':'saddlebrown','tolerance':0.01},
+                             'red':{'color':'red','tolerance':0.02},
+                             'green':{'color':'green','tolerance':0.005},
+                             'blue':{'color':'blue','tolerance':0.0025},
+                             'violet':{'color':'dark violet','tolerance':0.001},
+                             'gold':{'color':'#FFD700','tolerance':0.05},
+                             'silver':{'color':'#C0C0C0','tolerance':0.1},
+                             'none':{'color':self.bodyColor,'tolerance':0.2},
+                             }
+        
+        self.colorUse = [self.colorList['brown']['color'],self.colorList['black']['color'],
+                         self.colorList['red']['color'],self.colorTolerance['gold']['color']]
+        #create button dict for store button list
+        self.buttonList ={}        
+
+        self.canvas = Canvas(frame,width=500,height=100)
+        self.canvas.pack(pady=10)
+
+        #resistor leg
+        self.canvas.create_polygon([0,40,500,40,500,60,0,60],fill='grey',outline='white')
+
+        #resistor body
+        self.canvas.create_polygon([100,0,400,0,400,100,100,100],fill=self.bodyColor)
+        
+        #--------color choosing tab frame--------------------#
         self.colorChooseTab = Frame(frame,width=500,height=50)
-        self.colorChooseTab.place(x=250,y=500)
+        self.colorChooseTab.place(x=250,y=400)
         
         #--------color choosing menu frame--------------------#
         self.colorChooseMenu = Frame(frame,width=500,height=50)
@@ -45,28 +62,42 @@ class colorDisplay():
     
     def colorDraw(self):            
         #color1
-        self.canvas.create_polygon([150,200,175,200,175,300,150,300],fill=self.colorUse[0])
+        self.canvas.create_polygon([150,0,175,0,175,100,150,100],fill=self.colorUse[0])
         #color2
-        self.canvas.create_polygon([200,200,225,200,225,300,200,300],fill=self.colorUse[1])
+        self.canvas.create_polygon([200,0,225,0,225,100,200,100],fill=self.colorUse[1])
         #color3
-        self.canvas.create_polygon([250,200,275,200,275,300,250,300],fill=self.colorUse[2])
+        self.canvas.create_polygon([250,0,275,0,275,100,250,100],fill=self.colorUse[2])
         #color4
-        self.canvas.create_polygon([325,200,350,200,350,300,325,300],fill=self.colorUse[3])
+        self.canvas.create_polygon([325,0,350,0,350,100,325,100],fill=self.colorUse[3])
+    
+    def clearButton(self):
+        for b in self.buttonList.values():
+            b['button'].grid_forget()
         
     
-    def colorChoosingMenu(self,frame,number):
-        for i,v in enumerate(self.colorList.values()):
-            B = Button(frame,text='',bg=v['color'])
-            B.configure(command= lambda C=v,number=number: self.colorTabSelect(C,number))
-            B.grid(row=0,column=i,padx=12,ipadx=6)
+    def colorButtonCreate(self,frame,number):
+
+        if number !='4':
+            for i,v in enumerate(self.colorList.values()):
+                B = Button(frame,text=number,bg=v['color'])
+                self.buttonList[v['color']] ={'button':B,'column':i}
+                B.configure(command= lambda C=v,number=number: self.colorTabSelect(C,number))
+                B.grid(row=0,column=i,padx=12,ipadx=6)
             
-    
-    def colorButtonDraw(self):
-        self.colorButtonMenu(self.colorChooseMenu)
+        else:
+            for i,v in enumerate(self.colorTolerance.values()):
+                B = Button(frame,text=number,bg=v['color'])
+                self.buttonList[v['color']] ={'button':B,'column':i}
+                B.configure(command= lambda C=v,number=number: self.colorTabSelect(C,number))
+                B.grid(row=0,column=i,padx=12,ipadx=6)
+        print(self.buttonList)        
+
         
     def colorSelect(self,number=''):
-        self.colorChooseTab.place(x=250,y=500)
-        self.colorChoosingMenu(self.colorChooseTab,number)
+        self.colorChooseTab.place_forget()
+        self.colorChooseTab.place(x=250,y=400)
+        self.clearButton()
+        self.colorButtonCreate(self.colorChooseTab,number)
 
         
     def colorTabSelect(self,color='',number=''):
@@ -76,9 +107,13 @@ class colorDisplay():
         print('color: ',self.colorUse)
         self.colorDraw()
         self.colorButtonDraw()
-        
-        
+
+        #clear colorChooseTab for diapearance       
         self.colorChooseTab.place_forget()
+
+
+    def colorButtonDraw(self):
+        self.colorButtonMenu(self.colorChooseMenu)
         
         
     
@@ -89,3 +124,4 @@ class colorDisplay():
        
 # if __name__ == '__main__':
 #     test = colorDisplay()
+
