@@ -12,7 +12,7 @@ class App:
         self.root.title('Resistor calculator')
 
         self.root.iconbitmap('Resistor.ico')
-        self.L=Label(self.root,text='Resistor Calculator',font=('AR DELANEY',50))
+        self.L=Label(self.root,text='Resistor Calculator',font=('AR DELANEY',50),fg='dark green')
         self.L.pack(pady=20)
         self.dataPad = Frame(self.root,width=100,height=50)
         self.dataPad.pack(pady=20)
