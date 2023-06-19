@@ -28,20 +28,21 @@ class Calculator:
     
     def colorToRealColor(self,color):
         for i,c in enumerate(color):
+            Color = color
             if c == self.colorList['brown']['color']:
-                color[i] = 'brown'
+                Color[i] = 'brown'
             elif c == self.colorList['orange']['color']:
-                color[i]= 'orange'
+                Color[i]= 'orange'
             elif c == self.colorList['violet']['color']:
-                color[i] = 'violet'
+                Color[i] = 'violet'
             elif c== self.colorTolerance['gold']['color']:
-                color[i] = 'gold'
+                Color[i] = 'gold'
             elif c == self.colorTolerance['silver']['color']:
-                color[i] = 'silver'
+                Color[i] = 'silver'
             elif c == self.colorTolerance['none']['color']:
-                color[i] = 'none'
-        print(color)
-        return color
+                Color[i] = 'none'
+        print(Color)
+        return Color
     def colorToData(self,Color):
         colorConvert = self.colorToRealColor(Color)
         # sign1=self.colorList[colorConvert[0]]['value']
