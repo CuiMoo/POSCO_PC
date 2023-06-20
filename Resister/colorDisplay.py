@@ -6,15 +6,17 @@ oCalculator = Calculator()
 
 class colorDisplay():
     def __init__(self,frame):
-        self.bodyColor =oCalculator.bodyColor
+        self.bodyColor ='#e6aa5c'
 
         self.colorList =oCalculator.colorList
 
         self.colorTolerance =oCalculator.colorTolerance
-        self.colorUse = [self.colorList['brown']['color'],self.colorList['black']['color'],
-                         self.colorList['red']['color'],self.colorTolerance['gold']['color']]
+        self.colorUse = [self.colorList['brown']['show'],self.colorList['black']['show'],
+                         self.colorList['red']['show'],self.colorTolerance['gold']['show']]
         #create button dict for store button list
-        self.buttonList ={}        
+        self.buttonList ={}
+
+          
 
         self.canvas = Canvas(frame,width=500,height=100)
         self.canvas.pack(pady=10)
@@ -43,8 +45,11 @@ class colorDisplay():
         Bc4 = Button(frame ,text='4',bg=self.colorUse[3],command=lambda x='4':self.colorSelect(x))
         Bc4.grid(row=0,column=3,padx=40,ipadx=6)
     
-    
-    def colorDraw(self):            
+
+    def colorButtonDraw(self):
+        self.colorButtonMenu(self.colorChooseMenu)
+
+    def colorDraw(self):
         #color1
         self.canvas.create_polygon([150,0,175,0,175,100,150,100],fill=self.colorUse[0])
         #color2
@@ -63,14 +68,14 @@ class colorDisplay():
 
         if number !='4':
             for i,v in enumerate(self.colorList.values()):
-                B = Button(frame,text=number,bg=v['color'])
+                B = Button(frame,text=number,bg=v['show'])
                 self.buttonList[v['color']] ={'button':B,'column':i}
                 B.configure(command= lambda C=v,number=number: self.colorTabSelect(C,number))
                 B.grid(row=0,column=i,padx=12,ipadx=6)
             
         else:
             for i,v in enumerate(self.colorTolerance.values()):
-                B = Button(frame,text=number,bg=v['color'])
+                B = Button(frame,text=number,bg=v['show'])
                 self.buttonList[v['color']] ={'button':B,'column':i}
                 B.configure(command= lambda C=v,number=number: self.colorTabSelect(C,number))
                 B.grid(row=0,column=i,padx=12,ipadx=6)
@@ -87,7 +92,7 @@ class colorDisplay():
     def colorTabSelect(self,color='',number=''):
         print(color['color'])
         n = int(number)-1
-        self.colorUse[n] =color['color']
+        self.colorUse[n] =color['show']
         print('color: ',self.colorUse)
         self.colorDraw()
         self.colorButtonDraw()
@@ -98,11 +103,11 @@ class colorDisplay():
 
     def colorTodata(self,color):
         result = oCalculator.colorToData(color)
+        
 
 
 
-    def colorButtonDraw(self):
-        self.colorButtonMenu(self.colorChooseMenu)
+ 
         
               
 # if __name__ == '__main__':
