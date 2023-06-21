@@ -15,14 +15,17 @@ class Calculator:
                           'white':{'color':'white','show':'white','value':9,'power':1_000_000_000},
                           }
         
-        self.colorTolerance ={'brown':{'color':'brown','show':'saddlebrown','tolerance':1},
-                             'red':{'color':'red','show':'red','tolerance':2},
-                             'green':{'color':'green','show':'green','tolerance':0.005},
-                             'blue':{'color':'blue','show':'blue','tolerance':0.0025},
-                             'violet':{'color':'violet','show':'dark violet','tolerance':0.001},
-                             'gold':{'color':'gold','show':'#FFD700','tolerance':0.05},
-                             'silver':{'color':'silver','show':'#C0C0C0','tolerance':0.1},
-                             'none':{'color':'none','show':'#e6aa5c','tolerance':0.2},
+        self.colorTolerance ={'brown':{'color':'brown','show':'saddlebrown','tolerance':1,'code':'F'},
+                             'red':{'color':'red','show':'red','tolerance':2,'code':'G'},
+                             'orange':{'color':'orange','show':'dark orange','tolerance':0.05,'code':'W'},
+                             'yellow':{'color':'yellow','show':'yellow','tolerance':0.02,'code':'P'},
+                             'green':{'color':'green','show':'green','tolerance':0.5,'code':'D'},
+                             'blue':{'color':'blue','show':'blue','tolerance':0.25,'code':'C'},
+                             'violet':{'color':'violet','show':'dark violet','tolerance':0.1,'code':'B'},
+                             'grey':{'color':'grey','show':'grey','tolerance':0.01,'code':'L'},
+                             'gold':{'color':'gold','show':'#FFD700','tolerance':5,'code':'G'},
+                             'silver':{'color':'silver','show':'#C0C0C0','tolerance':10,'code':'K'},
+                             'none':{'color':'none','show':'#e6aa5c','tolerance':20,'code':'M'},
                              }
     
 
@@ -40,10 +43,11 @@ class Calculator:
         ColorData.append(self.findColorKey(self.colorTolerance,'show',Color[3]))
         
         resistance = (self.colorList[ColorData[0]]['value']*10+ float(self.colorList[ColorData[1]]['value'])) * (self.colorList[ColorData[2]]['power'])
-        #resistance = self.colorList[ColorData[0]]['value'] 
-        #+(self.colorList[ColorData[1]]['value'])*0.1    *    (self.colorList[ColorData[2]]['power'])
-        tolerance = self.colorTolerance[ColorData[3]]['tolerance']
-        print(f'{resistance}tolerance: {tolerance}%')
+
+        tolorance = self.colorTolerance[ColorData[3]]['tolerance']
+        code = self.colorTolerance[ColorData[3]]['code']
+        #print(f'{resistance}tolerance: {tolorance}% ({code})')
+        return resistance,tolorance,code
         
         
 
