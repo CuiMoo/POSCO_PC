@@ -42,7 +42,8 @@ class Calculator:
             ColorData.append(self.findColorKey(self.colorList,'show',i))
         ColorData.append(self.findColorKey(self.colorTolerance,'show',Color[3]))
         
-        resistance = (self.colorList[ColorData[0]]['value']*10+ float(self.colorList[ColorData[1]]['value'])) * (self.colorList[ColorData[2]]['power'])
+        resistance = (self.colorList[ColorData[0]]['value']*10+ float(self.colorList[ColorData[1]]['value']))\
+                    * (self.colorList[ColorData[2]]['power'])
 
         tolorance = self.colorTolerance[ColorData[3]]['tolerance']
         code = self.colorTolerance[ColorData[3]]['code']

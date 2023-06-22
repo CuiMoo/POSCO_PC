@@ -7,6 +7,8 @@ oCalculator = Calculator()
 class colorDisplay():
     def __init__(self,frame):
         self.bodyColor ='#e6aa5c'
+        #Data box
+        self.boxText = None
 
         self.colorList =oCalculator.colorList
 
@@ -14,11 +16,14 @@ class colorDisplay():
         self.colorUse = [self.colorList['brown']['show'],self.colorList['black']['show'],
                          self.colorList['red']['show'],self.colorTolerance['gold']['show']]
         #create button dict for store button list
-        self.buttonList ={}         
+        self.buttonList ={}
+        
+        # self.result = Label(frame,textvariable=self.boxText,font=(None,30),fg='dark blue')
+        # self.result.pack()    
         self.canvas = Canvas(frame,width=500,height=100)
         self.canvas.pack(pady=10)
-        #Data box
-        self.boxText = None
+       
+        
         #resistor leg
         self.canvas.create_polygon([0,40,500,40,500,60,0,60],fill='grey',outline='white')
 
@@ -60,12 +65,14 @@ class colorDisplay():
     def DataBox(self,frame):
         self.boxText = StringVar()
         self.colorTodata(self.colorUse)
-        self.showData = ttk.Entry(frame,font=(None,30),textvariable=self.boxText)
+        self.showData = ttk.Entry(frame,font=('Bookman Old Style',30),textvariable=self.boxText)
         self.showData.grid(row=0,column=0,padx=10)
 
     def enterButton(self,frame):
         self.enter = ttk.Button(frame,text='Enter')
         self.enter.grid(row=0,column=1,ipady=15,ipadx=20)
+        
+
 
     def clearButton(self):
         for b in self.buttonList.values():
@@ -110,8 +117,25 @@ class colorDisplay():
 
     def colorTodata(self,color):
         resistance,tolorance,code = oCalculator.colorToData(color)
-        self.boxText.set(f'{resistance} Ω ± {tolorance}% ({code})')
-        print(resistance,tolorance,code)
+        
+        if resistance >= 1000_000_000:
+            resistance = resistance/1000_000_000
+            self.boxText.set(f'{resistance} GΩ ± {tolorance}% ({code})')
+            print(f'{resistance} GΩ ± {tolorance}% ({code})')
+            
+        elif resistance >= 1000_000:
+            resistance = resistance/1000_000
+            self.boxText.set(f'{resistance} MΩ ± {tolorance}% ({code})')
+            print(f'{resistance} MΩ ± {tolorance}% ({code})')
+            
+        elif resistance >= 1000:
+            resistance = resistance/1000
+            self.boxText.set(f'{resistance} kΩ ± {tolorance}% ({code})')
+            print(f'{resistance} kΩ ± {tolorance}% ({code})')
+            
+        else:
+            self.boxText.set(f'{resistance} Ω ± {tolorance}% ({code})')
+            print(f'{resistance} Ω ± {tolorance}% ({code})')
         
 
 
@@ -121,4 +145,3 @@ class colorDisplay():
               
 # if __name__ == '__main__':
 #     test = colorDisplay()
-
