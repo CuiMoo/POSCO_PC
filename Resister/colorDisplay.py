@@ -69,7 +69,7 @@ class colorDisplay():
         self.showData.grid(row=0,column=0,padx=10)
 
     def enterButton(self,frame):
-        self.enter = ttk.Button(frame,text='Enter')
+        self.enter = ttk.Button(frame,text='Enter',command=self.dataConvert)
         self.enter.grid(row=0,column=1,ipady=15,ipadx=20)
         
 
@@ -136,12 +136,15 @@ class colorDisplay():
         else:
             self.boxText.set(f'{resistance} Ω ± {tolorance}% ({code})')
             print(f'{resistance} Ω ± {tolorance}% ({code})')
+
+    
+    def dataConvert(self):
+        convertedData = oCalculator.dataToColor(int(self.boxText.get()))
+        print(convertedData)
         
 
 
 
- 
-        
               
 # if __name__ == '__main__':
 #     test = colorDisplay()

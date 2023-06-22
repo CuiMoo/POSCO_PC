@@ -27,6 +27,7 @@ class Calculator:
                              'silver':{'color':'silver','show':'#C0C0C0','tolerance':10,'code':'K'},
                              'none':{'color':'none','show':'#e6aa5c','tolerance':20,'code':'M'},
                              }
+        self.convertColor = []
     
 
     def findColorKey(self,dictList,name,value):
@@ -50,7 +51,66 @@ class Calculator:
         #print(f'{resistance}tolerance: {tolorance}% ({code})')
         return resistance,tolorance,code
         
+    def dataToColor(self,data):
+    
+        if (data/10_000_000_000)>=1:
+            self.convertColor.append('white')
+            self.convertColor.append(self.findBand2(data/10_000_000_000))
+        elif (data /1_000_000_000)>=1:
+            self.convertColor.append('grey')
+            self.convertColor.append(self.findBand2(data/1_000_000_000))
+        elif (data/100_000_000)>=1:
+            self.convertColor.append('violet')
+            self.convertColor.append(self.findBand2(data/100_000_000))
+        elif (data/10_000_000)>=1:
+            self.convertColor.append('blue')
+            self.convertColor.append(self.findBand2(data/10_000_000))
+        elif (data/1_000_000)>=1:
+            self.convertColor.append('green')
+            self.convertColor.append(self.findBand2(data/1_000_000))
+        elif (data/100_000)>=1:
+            self.convertColor.append('yellow')
+            self.convertColor.append(self.findBand2(data/100_000))
+        elif (data/10_000)>=1:
+            self.convertColor.append('orange')
+            self.convertColor.append(self.findBand2(data/10_000))
+        elif (data/1_000)>=1:
+            self.convertColor.append('red')
+            self.convertColor.append(self.findBand2(data/1_000))
+        elif (data/100)>=1:
+            self.convertColor.append('brown')
+            self.convertColor.append(self.findBand2(data/100))
+        else:
+            self.convertColor.append('black')
+            self.convertColor.append(self.findBand2(data/10))
+
+        return self.convertColor
+
+    def findBand2(self,data):
+        band2 = data%10
+        print('band',band2)
+        if band2 == 0:
+            return 'black'
+        elif band2 == 1:
+            return 'brown'
+        elif band2 == 2:
+            return 'red'
+        elif band2 == 3:
+            return 'orange'
+        elif band2 == 4:
+            return 'yellow'
+        elif band2 == 5:
+            return 'green'
+        elif band2 == 6:
+            return 'blue'
+        elif band2 == 7:
+            return 'violet'
+        elif band2 == 8:
+            return 'grey'
+        elif band2 ==9:
+            return 'white'
         
+
 
 # if __name__ =='__main__':
 #     oCalculator =Calculator()
