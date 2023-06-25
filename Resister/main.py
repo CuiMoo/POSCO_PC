@@ -8,7 +8,14 @@ class App:
         #initial data
     
         self.root = Tk()
-        self.root.geometry('1000x600')
+        self.W = 1000
+        self.H = 600
+        self.MW = self.root.winfo_screenwidth()
+        self.MH = self.root.winfo_screenheight()
+        self.SX = (self.MW/2) - (self.W/2)
+        self.SY = (self.MH/2) -(self.H/2)
+        self.root.geometry(f'{self.W}x{self.H}+{self.SX:.0f}+{self.SY:.0f}')
+        
         self.root.title('Resistor calculator')
         
         self.root.iconbitmap('Resistor.ico')

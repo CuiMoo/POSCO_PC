@@ -37,7 +37,9 @@ class colorDisplay():
         #--------color choosing menu frame--------------------#
         self.colorChooseMenu = Frame(frame,width=500,height=50)
         self.colorChooseMenu.pack()
-   
+
+        frame.bind('<Return>',self.dataConvert)
+        
     def colorButtonMenu(self,frame):
         Bc1 = Button(frame ,text='1',bg=self.colorUse[0],command=lambda x='1':self.colorSelect(x))
         Bc1.grid(row=0,column=0,padx=12,ipadx=6)
@@ -67,10 +69,12 @@ class colorDisplay():
         self.colorTodata(self.colorUse)
         self.showData = ttk.Entry(frame,font=('Bookman Old Style',30),textvariable=self.boxText)
         self.showData.grid(row=0,column=0,padx=10)
+        self.showData.focus()
 
     def enterButton(self,frame):
         self.enter = ttk.Button(frame,text='Enter',command=self.dataConvert)
         self.enter.grid(row=0,column=1,ipady=15,ipadx=20)
+
         
 
 
@@ -138,12 +142,26 @@ class colorDisplay():
             print(f'{resistance} Ω ± {tolorance}% ({code})')
 
     
-    def dataConvert(self):
-        convertedData = oCalculator.dataToColor(int(self.boxText.get()))
-        print(convertedData)
-        
+    def dataConvert(self,event=None):
+        try:
+            convertedData = oCalculator.dataToColor(int(self.boxText.get()))
+            convertedResistance =[]
+            for R in convertedData.values():
+                convertedResistance.append(R)
 
+            print('ConvertedR:',convertedResistance)
 
+            for i,c in enumerate(convertedResistance[:3]):
+                self.colorUse[i] = self.colorList[c]['show']
+
+            self.colorUse[3] = self.colorTolerance[convertedResistance[3]]['show']
+
+            self.colorDraw()
+            self.colorButtonDraw()
+            
+            print('colorUse: ',self.colorUse)
+        except:
+            messagebox.showwarning('Warning','Please input only number 0-1,000,000,000,000')
 
               
 # if __name__ == '__main__':

@@ -1,5 +1,5 @@
-from tkinter import *
 from colorDisplay import *
+import math
 
 class Calculator:
     def __init__(self):
@@ -27,7 +27,8 @@ class Calculator:
                              'silver':{'color':'silver','show':'#C0C0C0','tolerance':10,'code':'K'},
                              'none':{'color':'none','show':'#e6aa5c','tolerance':20,'code':'M'},
                              }
-        self.convertColor = []
+        
+        self.convertColor = {'band1':'','band2':'','band3':'','band4':'gold'}
     
 
     def findColorKey(self,dictList,name,value):
@@ -48,68 +49,110 @@ class Calculator:
 
         tolorance = self.colorTolerance[ColorData[3]]['tolerance']
         code = self.colorTolerance[ColorData[3]]['code']
-        #print(f'{resistance}tolerance: {tolorance}% ({code})')
+
         return resistance,tolorance,code
         
     def dataToColor(self,data):
     
         if (data/10_000_000_000)>=1:
-            self.convertColor.append('white')
-            self.convertColor.append(self.findBand2(data/10_000_000_000))
+            print(': ',data/10_000_000_000)
+            self.convertColor['band3'] = 'white'
+            self.convertColor['band2'] = self.findBand2(data/10_000_000_000)
+            self.convertColor['band1'] = self.findBand1(data/10_000_000_000)
         elif (data /1_000_000_000)>=1:
-            self.convertColor.append('grey')
-            self.convertColor.append(self.findBand2(data/1_000_000_000))
+            print(data /1_000_000_000)
+            self.convertColor['band3'] = 'grey'
+            self.convertColor['band2'] = self.findBand2(data/1_000_000_000)
+            self.convertColor['band1'] = self.findBand1(data/1_000_000_000)
         elif (data/100_000_000)>=1:
-            self.convertColor.append('violet')
-            self.convertColor.append(self.findBand2(data/100_000_000))
+            print(data/100_000_000)
+            self.convertColor['band3'] = 'violet'
+            self.convertColor['band2'] = self.findBand2(data/100_000_000)
+            self.convertColor['band1'] = self.findBand1(data/100_000_000)
         elif (data/10_000_000)>=1:
-            self.convertColor.append('blue')
-            self.convertColor.append(self.findBand2(data/10_000_000))
+            print(data/10_000_000)
+            self.convertColor['band3'] = 'blue'
+            self.convertColor['band2'] = self.findBand2(data/10_000_000)
+            self.convertColor['band1'] = self.findBand1(data/10_000_000)            
         elif (data/1_000_000)>=1:
-            self.convertColor.append('green')
-            self.convertColor.append(self.findBand2(data/1_000_000))
+            print(data/1_000_000)
+            self.convertColor['band3'] = 'green'
+            self.convertColor['band2'] = self.findBand2(data/1_000_000)
+            self.convertColor['band1'] = self.findBand1(data/1_000_000)
         elif (data/100_000)>=1:
-            self.convertColor.append('yellow')
-            self.convertColor.append(self.findBand2(data/100_000))
+            print(': ',data/100_000)
+            self.convertColor['band3'] = 'yellow'
+            self.convertColor['band2'] = self.findBand2(data/100_000)
+            self.convertColor['band1'] = self.findBand1(data/100_000)
         elif (data/10_000)>=1:
-            self.convertColor.append('orange')
-            self.convertColor.append(self.findBand2(data/10_000))
+            print(data/10_000)
+            self.convertColor['band3'] = 'orange'
+            self.convertColor['band2'] = self.findBand2(data/10_000)
+            self.convertColor['band1'] = self.findBand1(data/10_000)     
         elif (data/1_000)>=1:
-            self.convertColor.append('red')
-            self.convertColor.append(self.findBand2(data/1_000))
+            print(': ',data/1_000)
+            self.convertColor['band3'] = 'red'
+            self.convertColor['band2'] = (self.findBand2(data/1_000))
+            self.convertColor['band1'] = self.findBand1(data/1_000)
         elif (data/100)>=1:
-            self.convertColor.append('brown')
-            self.convertColor.append(self.findBand2(data/100))
+            print(': ',data/100)
+            self.convertColor['band3'] = 'brown'
+            self.convertColor['band2'] = (self.findBand2(data/100))
+            self.convertColor['band1'] = self.findBand1(data/100)
         else:
-            self.convertColor.append('black')
-            self.convertColor.append(self.findBand2(data/10))
+            print(': ',data/10)
+            self.convertColor['band3'] = 'black'
+            self.convertColor['band2'] = (self.findBand2(data/10))
+            self.convertColor['band1'] = self.findBand1(data/10)
 
         return self.convertColor
+    
+
+    def findColor(self,data):
+        if data == 0:
+            return 'black'
+        elif data == 1:
+            return 'brown'
+        elif data == 2:
+            return 'red'
+        elif data == 3:
+            return 'orange'
+        elif data == 4:
+            return 'yellow'
+        elif data == 5:
+            return 'green'
+        elif data == 6:
+            return 'blue'
+        elif data == 7:
+            return 'violet'
+        elif data == 8:
+            return 'grey'
+        elif data == 9:
+            return 'white'
 
     def findBand2(self,data):
-        band2 = data%10
-        print('band',band2)
-        if band2 == 0:
-            return 'black'
-        elif band2 == 1:
-            return 'brown'
-        elif band2 == 2:
-            return 'red'
-        elif band2 == 3:
-            return 'orange'
-        elif band2 == 4:
-            return 'yellow'
-        elif band2 == 5:
-            return 'green'
-        elif band2 == 6:
-            return 'blue'
-        elif band2 == 7:
-            return 'violet'
-        elif band2 == 8:
-            return 'grey'
-        elif band2 ==9:
-            return 'white'
+        data1 =data%1
+        data2 = data1*10
+        data4 = data2//1
+        data3 = data2%1
+
+        if data3>=0.5:
+            data3 = math.ceil(data3)
+
+        else:
+            data3 = math.floor(data3)
+        band2 = data4 + data3
+        if band2 ==10:
+            band2 =9
+        print('band2: ',band2)
+        return(self.findColor(band2))
         
+        
+    def findBand1(self,data):
+        band1 = data//1
+        print('band1: ',band1)
+        return(self.findColor(band1))
+
 
 
 # if __name__ =='__main__':
