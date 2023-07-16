@@ -9,3 +9,11 @@ entryMotor = ('VC-POR-01',
             'VC-2BR-02',
             'VC-ELT-01',
             'VC-ELT-02')
+
+centerMotor = ('VC-3TBR-01',
+            'VC-3TBR-02',
+            'VC-3TBR-03')
+
+deliveryMotor = ('VC-9TBR-01',
+            'VC-9TBR-02',
+            'VC-9TBR-03')
