@@ -78,13 +78,6 @@ class App:
         self.fontCom =font.Font(family=constant.font,size=12)
 
     
-
-        
-
-    def buttonDraw(self):
-        pass
-    
-    
     def VCsectionSelect(self):
         self.motorChossen.pack_forget()
         if self.v.get() == 1:
@@ -117,9 +110,6 @@ class App:
             self.motorChossen.current(0)
             self.motorChossen.pack()
 
-
-
-        
         
     def sectionSelect(self):
         
@@ -171,12 +161,19 @@ class App:
                        day = d)
         Cal.place(x=125,y=0)
         print('y:',y,'m:',m,'d:',d)
+        
+    def bearingTemp(self):
+        LB = Label(self.h2Frame,text='DE/NDE Bearing temp(°C)',font=(self.fontCom,12,'bold'))
+        LB.grid(row=0,column=0)
+        EDE = ttk.Entry(self.h3Frame,)
 
+    def vibrationBox(self):
+        pass
 
     def runApp(self):
         self.headDraw()
         self.sectionSelect()
-
+        self.bearingTemp()
         
         self.root.mainloop()
 
