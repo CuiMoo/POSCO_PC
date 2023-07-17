@@ -63,20 +63,24 @@ class App:
         self.currentMotor =StringVar()
         self.motorData = constant.entryMotor
 
-        self.h1Frame = Frame(self.hDetail,width=500,height=500)
+        self.h1Frame = Frame(self.hDetail,width=500,height=300)
         self.h1Frame.grid(row=0,column=0,padx=10)
 
-        self.h2Frame = Frame(self.hDetail,width=500,height=500,bg='#66ffcc')
+        self.h2Frame = Frame(self.hDetail,width=500,height=300)
         self.h2Frame.grid(row=0,column=1,padx=10)
 
-        self.h3Frame = Frame(self.hDetail,width=500,height=500,bg='#ccccff')
+        self.h3Frame = Frame(self.hDetail,width=500,height=300,bg='#ccccff')
         self.h3Frame.grid(row=0,column=2,padx=10)
 
-        self.h4Frame = Frame(self.hDetail,width=500,height=500,bg='#80e5ff')
+        self.h4Frame = Frame(self.hDetail,width=500,height=300,bg='#80e5ff')
         self.h4Frame.grid(row=0,column=3,padx=10)
 
         self.fontCom =font.Font(family=constant.font,size=12)
 
+        self.vTempDE = None
+        self.vTemNDE = None
+        self.vVibDE = None
+        self.vVivNDE =None
     
     def VCsectionSelect(self):
         self.motorChossen.pack_forget()
@@ -161,11 +165,47 @@ class App:
                        day = d)
         Cal.place(x=125,y=0)
         print('y:',y,'m:',m,'d:',d)
+
+    def inputBoxSet(self,window,text1,text2,font):
+        v_strVar = StringVar()
+        T1 = Label(window,text=text1,font=font)
+        E = ttk.Entry(window,textvariable=v_strVar,font=self.fontCom,justify='right')
+        T2 = Label(window,text=text2,font=self.fontCom)
+        return T1,E,v_strVar,T2
         
     def bearingTemp(self):
-        LB = Label(self.h2Frame,text='DE/NDE Bearing temp(°C)',font=(self.fontCom,12,'bold'))
-        LB.grid(row=0,column=0)
-        EDE = ttk.Entry(self.h3Frame,)
+        TH1 = Label(self.h2Frame,text='BEARING TEMP',font=(self.font,12,'bold'))
+        TH1.grid(row=0,column=1)
+        T11,E11,self.vTempDE,T12 = self.inputBoxSet(self.h2Frame,'DE','°C',self.fontCom)
+        T11.grid(row=1,column=0,pady=5)
+        E11.grid(row=1,column=1,pady=5)
+        T12.grid(row=1,column=2,pady=5)
+
+        T13,E14,self.vTempNDE,T15 = self.inputBoxSet(self.h2Frame,'NDE','°C',self.fontCom)
+        T13.grid(row=2,column=0,pady=5)
+        E14.grid(row=2,column=1,pady=5)
+        T15.grid(row=2,column=2,pady=5)
+
+        TH2 = Label(self.h2Frame,text='VIBRATION',font=(self.font,12,'bold'))
+        TH2.grid(row=3,column=1)
+        T16,E17,self.vVibDE,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
+        T16.grid(row=4,column=0,pady=5)
+        E17.grid(row=4,column=1,pady=5)
+        T18.grid(row=4,column=2,pady=5)
+
+        T19,E20,self.vVivNDE,T21 = self.inputBoxSet(self.h2Frame,'Horizontal','mm/s',self.fontCom)
+        T19.grid(row=5,column=0,pady=5)
+        E20.grid(row=5,column=1,pady=5)
+        T21.grid(row=5,column=2,pady=5)
+
+        
+        T22,E23,self.vVivNDE,T24 = self.inputBoxSet(self.h2Frame,'Airial','mm/s',self.fontCom)
+        T22.grid(row=6,column=0,pady=5)
+        E23.grid(row=6,column=1,pady=5)
+        T24.grid(row=6,column=2,pady=5)
+
+
+        
 
     def vibrationBox(self):
         pass

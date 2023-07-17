@@ -224,4 +224,3 @@ deliveryMotor = ('VC-DLT-01',
             'VC-1DCC-01',
             'VC-2DCC-01',
             'VC-DTC-01')
-
