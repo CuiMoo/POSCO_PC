@@ -80,40 +80,37 @@ class App:
         self.vTempDE = None
         self.vTemNDE = None
         self.vVibDE = None
-        self.vVivNDE =None
+        self.vVivNDE = None
+        self.vBodyTemp = None
     
     def VCsectionSelect(self):
         self.motorChossen.pack_forget()
-        if self.v.get() == 1:
+        if self.v.get() == 1:  #Entry
             self.sectionTitle.set('ENTRY')
-            # self.motorData == constant.entryMotor
-            self.motorChossen = ttk.Combobox(self.h1Frame,width=15,textvariable=self.currentMotor,
+            self.motorChossen = self.motorSelect(self.h1Frame,constant.entryMotor)
+            self.motorChossen.pack()
+
+
+        elif self.v.get() == 2: #Center
+            self.sectionTitle.set('CENTER')
+            self.motorChossen = self.motorSelect(self.h1Frame,constant.centerMotor)
+            self.motorChossen.pack()
+
+
+        elif self.v.get() == 3: #Delivery
+            self.sectionTitle.set('DELIVERY')
+            self.motorChossen = self.motorSelect(self.h1Frame,constant.deliveryMotor)
+            self.motorChossen.pack()
+    
+    def motorSelect(self,window,data):
+        #combo box for motor selection
+        SelectionBox = ttk.Combobox(window,width=15,textvariable=self.currentMotor,
                                          justify='center',font=self.fontCom)
         
-            self.motorChossen['values'] = constant.entryMotor
-            self.motorChossen.current(0)
-            self.motorChossen.pack()
-
-        elif self.v.get() == 2:
-            self.sectionTitle.set('CENTER')
-            # self.motorData == constant.centerMotor
-            self.motorChossen = ttk.Combobox(self.h1Frame,width=15,textvariable=self.currentMotor,
-                                         justify='center',font=self.fontCom)
-            
-            self.motorChossen['values'] = constant.centerMotor
-            self.motorChossen.current(0)
-            self.motorChossen.pack()
-
-        elif self.v.get() == 3:
-            self.sectionTitle.set('DELIVERY')
-            # self.motorData == constant.deliveryMotor
-            self.motorChossen = ttk.Combobox(self.h1Frame,width=15,textvariable=self.currentMotor,
-                                         justify='center',font=self.fontCom)
-
-            self.motorChossen['values'] = constant.deliveryMotor
-            self.motorChossen.current(0)
-            self.motorChossen.pack()
-
+        SelectionBox['values'] = data
+        SelectionBox['state'] = 'readonly'
+        SelectionBox.current(0)
+        return SelectionBox
         
     def sectionSelect(self):
         
@@ -147,14 +144,10 @@ class App:
                    font=(self.font,40,'bold'),fg='dark blue')
         sectionName.pack()
 
-
-
-        self.motorChossen = ttk.Combobox(self.h1Frame,width=15,textvariable=self.currentMotor,
-                                         justify='center',font=self.fontCom)
-        
-        self.motorChossen['values'] = self.motorData
+        #-Create a combo box-#
+        self.motorChossen = self.motorSelect(self.h1Frame,self.motorData)
         self.motorChossen.pack()
-        self.motorChossen.current(0)
+
 
         #-Calendar-#
         y = int(datetime.now().strftime('%Y'))
@@ -165,15 +158,19 @@ class App:
                        day = d)
         Cal.place(x=125,y=0)
         print('y:',y,'m:',m,'d:',d)
+        
+
 
     def inputBoxSet(self,window,text1,text2,font):
         v_strVar = StringVar()
         T1 = Label(window,text=text1,font=font)
         E = ttk.Entry(window,textvariable=v_strVar,font=self.fontCom,justify='right')
+ 
         T2 = Label(window,text=text2,font=self.fontCom)
         return T1,E,v_strVar,T2
         
     def bearingTemp(self):
+        #-Bearing Temp-#
         TH1 = Label(self.h2Frame,text='BEARING TEMP',font=(self.font,12,'bold'))
         TH1.grid(row=0,column=1)
         T11,E11,self.vTempDE,T12 = self.inputBoxSet(self.h2Frame,'DE','°C',self.fontCom)
@@ -181,11 +178,13 @@ class App:
         E11.grid(row=1,column=1,pady=5)
         T12.grid(row=1,column=2,pady=5)
 
+
         T13,E14,self.vTempNDE,T15 = self.inputBoxSet(self.h2Frame,'NDE','°C',self.fontCom)
         T13.grid(row=2,column=0,pady=5)
         E14.grid(row=2,column=1,pady=5)
         T15.grid(row=2,column=2,pady=5)
 
+        #-Vibration-#
         TH2 = Label(self.h2Frame,text='VIBRATION',font=(self.font,12,'bold'))
         TH2.grid(row=3,column=1)
         T16,E17,self.vVibDE,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
@@ -203,12 +202,15 @@ class App:
         T22.grid(row=6,column=0,pady=5)
         E23.grid(row=6,column=1,pady=5)
         T24.grid(row=6,column=2,pady=5)
-
-
         
-
-    def vibrationBox(self):
-        pass
+        #-Lubrication level-#                
+        TH3 = Label(self.h2Frame,text='LUBRICATION LEVEL',font=(self.font,12,'bold'))
+        TH3.grid(row=7,column=1)
+        T31,E32,self.vBodyTemp,T33 = self.inputBoxSet(self.h2Frame,'Oil Level','%',self.fontCom)
+        T31.grid(row=8,column=0,pady=5)
+        E32.grid(row=8,column=1,pady=5)
+        T33.grid(row=8,column=2,pady=5)
+        
 
     def runApp(self):
         self.headDraw()
