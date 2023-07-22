@@ -11,7 +11,7 @@ pyautogui.FAILSAFE = True
 
 yStartPoint = 662 
 
-#---INPUT HOW MANY OF YOUR ODER HERE---#
+#---INPUT HOW MANY OF YOUR ODERS HERE---#
 HowMany = 3  
 #--------------------------------------#
 
@@ -39,6 +39,6 @@ def autoBot():
             print('Sequence suspended ')
             break
     t2 = time.time()      
-    print(f'Done, Usage time{t2-t1}s.')
+    print(f'Done, Usage time: {(t2-t1):.2f}s.')
            
 autoBot()
