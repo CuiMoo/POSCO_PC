@@ -54,6 +54,10 @@ class App:
         #-Detail-#
         self.hDetail = Frame(self.T1,width=200,height=300)
         self.hDetail.pack(fill=X)
+
+        #-Menu button-#
+        self.comFrame =Frame(self.T1,width=300,height=50,bg='#76b5c5')
+        self.comFrame.pack(fill=X,pady=5)
         
         #-Font Set-#
         self.font =constant.font
@@ -69,13 +73,17 @@ class App:
         self.h2Frame = Frame(self.hDetail,width=500,height=300)
         self.h2Frame.grid(row=0,column=1,padx=10)
 
-        self.h3Frame = Frame(self.hDetail,width=500,height=300,bg='#ccccff')
+        self.h3Frame = Frame(self.hDetail,width=500,height=300)
         self.h3Frame.grid(row=0,column=2,padx=10)
 
-        self.h4Frame = Frame(self.hDetail,width=500,height=300,bg='#80e5ff')
+        self.h4Frame = Frame(self.hDetail,width=300,height=300)
         self.h4Frame.grid(row=0,column=3,padx=10)
 
+        self.h5Frame = Frame(self.hDetail,width=500,height=300,bg='light blue')
+        self.h5Frame.grid(row=0,column=4,padx=10)
+
         self.fontCom =font.Font(family=constant.font,size=12)
+
 
         self.vTempDE = None
         self.vTemNDE = None
@@ -131,7 +139,9 @@ class App:
                          background='#ff8566',
                          command= lambda :self.VCsectionSelect())
         R2.pack(fill=X,ipady=10)
-        
+
+    
+
 
     def headDraw(self):
 
@@ -150,14 +160,26 @@ class App:
 
 
         #-Calendar-#
+        L = Label(self.h4Frame,text='DATE',font=(self.font,15,'bold'))
+        L.grid(row=0,column=0,pady=10)
         y = int(datetime.now().strftime('%Y'))
         m = int(datetime.now().strftime('%m'))
         d = int(datetime.now().strftime('%d'))
         Cal = Calendar(self.h4Frame,selectmode='day',
                        year = y,month=m,
                        day = d)
-        Cal.place(x=125,y=0)
-        print('y:',y,'m:',m,'d:',d)
+        Cal.grid(row=1,column=0,padx=10)
+
+    def menuBar(self):
+        E01 = ttk.Button(self.comFrame,text='SAVE')
+        E01.pack(pady=5,ipady=12)
+        E02 = ttk.Button(self.comFrame,text='EDITE')
+        E02.pack(pady=5,ipady=12)
+        E03 = ttk.Button(self.comFrame,text='NEW')
+        E03.pack(pady=5,ipady=12)
+
+
+
         
 
 
@@ -210,12 +232,27 @@ class App:
         T31.grid(row=8,column=0,pady=5)
         E32.grid(row=8,column=1,pady=5)
         T33.grid(row=8,column=2,pady=5)
+
+        #-Text box-#
+        L = Label(self.h3Frame,text='Comment',font=(self.font,15,'bold'))
+        L.grid(row=0,column=0)
+        TE1 = self.remarkBox(self.h3Frame)
+        TE1.grid(row=1,column=0)
+        # E01 = ttk.Button(self.h3Frame,text='SAVE',command='top')
+        # E01.grid(row=2,column=0,ipadx=10,ipady=10)
+        # E02 = ttk.Button(self.h3Frame,text='SAVE',command='top')
+        # E02.grid(row=2,column=1,ipadx=10,ipady=10)
+
+    def remarkBox(self,window):
+        T = Text(window,height=10,width=32,font=self.font)
+        return T
         
 
     def runApp(self):
         self.headDraw()
         self.sectionSelect()
         self.bearingTemp()
+        self.menuBar()
         
         self.root.mainloop()
 
