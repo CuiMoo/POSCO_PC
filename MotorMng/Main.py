@@ -86,10 +86,12 @@ class App:
 
 
         self.vTempDE = None
-        self.vTemNDE = None
-        self.vVibDE = None
-        self.vVivNDE = None
+        self.vTempNDE = None
+        self.vVibDE_V= None
+        self.vViNDE_H = None
+        self.vViNDE_A = None
         self.vBodyTemp = None
+        
     
     def VCsectionSelect(self):
         self.motorChossen.pack_forget()
@@ -176,11 +178,7 @@ class App:
         E02 = ttk.Button(self.comFrame,text='EDITE')
         E02.pack(pady=5,ipady=12)
         E03 = ttk.Button(self.comFrame,text='NEW')
-        E03.pack(pady=5,ipady=12)
-
-
-
-        
+        E03.pack(pady=5,ipady=12)       
 
 
     def inputBoxSet(self,window,text1,text2,font):
@@ -209,18 +207,18 @@ class App:
         #-Vibration-#
         TH2 = Label(self.h2Frame,text='VIBRATION',font=(self.font,12,'bold'))
         TH2.grid(row=3,column=1)
-        T16,E17,self.vVibDE,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
+        T16,E17,self.vVibDE_V,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
         T16.grid(row=4,column=0,pady=5)
         E17.grid(row=4,column=1,pady=5)
         T18.grid(row=4,column=2,pady=5)
 
-        T19,E20,self.vVivNDE,T21 = self.inputBoxSet(self.h2Frame,'Horizontal','mm/s',self.fontCom)
+        T19,E20,self.vViNDE_H,T21 = self.inputBoxSet(self.h2Frame,'Horizontal','mm/s',self.fontCom)
         T19.grid(row=5,column=0,pady=5)
         E20.grid(row=5,column=1,pady=5)
         T21.grid(row=5,column=2,pady=5)
 
         
-        T22,E23,self.vVivNDE,T24 = self.inputBoxSet(self.h2Frame,'Airial','mm/s',self.fontCom)
+        T22,E23,self.vViNDE_A,T24 = self.inputBoxSet(self.h2Frame,'Airial','mm/s',self.fontCom)
         T22.grid(row=6,column=0,pady=5)
         E23.grid(row=6,column=1,pady=5)
         T24.grid(row=6,column=2,pady=5)
@@ -242,10 +240,27 @@ class App:
         # E01.grid(row=2,column=0,ipadx=10,ipady=10)
         # E02 = ttk.Button(self.h3Frame,text='SAVE',command='top')
         # E02.grid(row=2,column=1,ipadx=10,ipady=10)
+        
+        self.vTempDE.set('0')
+        self.vTempNDE.set('0')
+        self.vVibDE_V.set('0')
+        self.vViNDE_H.set('0')
+        self.vViNDE_A.set('0')
+        self.vBodyTemp.set('0')
 
     def remarkBox(self,window):
         T = Text(window,height=10,width=32,font=self.font)
         return T
+    
+    def historyTable(self,window):
+        header = ['No','motor name','date']
+        hwidth = [100,300,100,100]
+        hisTable = ttk.Treeview(window,columns=header,show='headings',height=15)
+        hisTable.pack()
+        for hd,hw in zip(header,hwidth):
+            hisTable.column(hd,width=hw)
+            hisTable.heading(hd,text=hd)
+        
         
 
     def runApp(self):
@@ -253,7 +268,7 @@ class App:
         self.sectionSelect()
         self.bearingTemp()
         self.menuBar()
-        
+        self.historyTable(self.h5Frame)
         self.root.mainloop()
 
 

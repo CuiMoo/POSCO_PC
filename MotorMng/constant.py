@@ -35,8 +35,8 @@ centerMotor = ('VC-ELT-01','VC-ELT-02','VC-ELT-03','VC-ELT-04','VC-ELT-05',
             'VC-TL-03','VC-TL-04','VC-8BR-01','VC-8BR-02','VC-8BR-03',
             'VC-8BR-04','VC-2HWRU-01','VC-2HWRU-02','VC-2HWRU-03','VC-2HWRU-04',
             'VC-2HWRU-05','VC-2HWRU-06','VC-1CU-01','VC-1CU-02','VC-1CU-03',
-            'VC-1CU-04','VC-CU-01','VC-CU-02','VC-CU-03','VC-CU-04','VC-9BR-01','VC-9BR-02',
-            'VC-9BR-03')
+            'VC-1CU-04','VC-CU-01','VC-CU-02','VC-CU-03','VC-CU-04','VC-9BR-01',
+            'VC-9BR-02','VC-9BR-03')
 
 deliveryMotor = ('VC-DLT-01','VC-DLT-02','VC-DLT-03','VC-DLT-04','VC-DLT-05',
             'VC-DLT-06','VC-10BR-01','VC-10BR-02','VC-10BR-03','VC-DRBT-01',
