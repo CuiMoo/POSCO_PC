@@ -56,7 +56,7 @@ class App:
         self.hDetail.pack(fill=X)
 
         #-Menu button-#
-        self.comFrame =Frame(self.T1,width=300,height=50,bg='#76b5c5')
+        self.comFrame =Frame(self.T1,width=300,height=50)
         self.comFrame.pack(fill=X,pady=5)
         
         #-Font Set-#
@@ -87,10 +87,10 @@ class App:
 
         self.vTempDE = None
         self.vTempNDE = None
-        self.vVibDE_V= None
-        self.vViNDE_H = None
-        self.vViNDE_A = None
-        self.vBodyTemp = None
+        self.vVib_V= None
+        self.vVib_H = None
+        self.vVib_A = None
+        self.vOil = None
         
     
     def VCsectionSelect(self):
@@ -124,7 +124,7 @@ class App:
         
     def sectionSelect(self):
         
-        R1 = Radiobutton(self.menuFrame,text='     ENTER     ',
+        R1 = Radiobutton(self.menuFrame,text='     ENTRY     ',
                          value='1',variable=self.v,indicator=0,
                          background='#ff8566',
                          command= lambda :self.VCsectionSelect())
@@ -207,18 +207,18 @@ class App:
         #-Vibration-#
         TH2 = Label(self.h2Frame,text='VIBRATION',font=(self.font,12,'bold'))
         TH2.grid(row=3,column=1)
-        T16,E17,self.vVibDE_V,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
+        T16,E17,self.vVib_V,T18 = self.inputBoxSet(self.h2Frame,'Vertical','mm/s',self.fontCom)
         T16.grid(row=4,column=0,pady=5)
         E17.grid(row=4,column=1,pady=5)
         T18.grid(row=4,column=2,pady=5)
 
-        T19,E20,self.vViNDE_H,T21 = self.inputBoxSet(self.h2Frame,'Horizontal','mm/s',self.fontCom)
+        T19,E20,self.vVib_H,T21 = self.inputBoxSet(self.h2Frame,'Horizontal','mm/s',self.fontCom)
         T19.grid(row=5,column=0,pady=5)
         E20.grid(row=5,column=1,pady=5)
         T21.grid(row=5,column=2,pady=5)
 
         
-        T22,E23,self.vViNDE_A,T24 = self.inputBoxSet(self.h2Frame,'Airial','mm/s',self.fontCom)
+        T22,E23,self.vVib_A,T24 = self.inputBoxSet(self.h2Frame,'Airial','mm/s',self.fontCom)
         T22.grid(row=6,column=0,pady=5)
         E23.grid(row=6,column=1,pady=5)
         T24.grid(row=6,column=2,pady=5)
@@ -226,7 +226,7 @@ class App:
         #-Lubrication level-#                
         TH3 = Label(self.h2Frame,text='LUBRICATION LEVEL',font=(self.font,12,'bold'))
         TH3.grid(row=7,column=1)
-        T31,E32,self.vBodyTemp,T33 = self.inputBoxSet(self.h2Frame,'Oil Level','%',self.fontCom)
+        T31,E32,self.vOil,T33 = self.inputBoxSet(self.h2Frame,'Oil Level','%',self.fontCom)
         T31.grid(row=8,column=0,pady=5)
         E32.grid(row=8,column=1,pady=5)
         T33.grid(row=8,column=2,pady=5)
@@ -243,18 +243,18 @@ class App:
         
         self.vTempDE.set('0')
         self.vTempNDE.set('0')
-        self.vVibDE_V.set('0')
-        self.vViNDE_H.set('0')
-        self.vViNDE_A.set('0')
-        self.vBodyTemp.set('0')
+        self.vVib_V.set('0')
+        self.vVib_H.set('0')
+        self.vVib_A.set('0')
+        self.vOil.set('0')
 
     def remarkBox(self,window):
         T = Text(window,height=10,width=32,font=self.font)
         return T
     
     def historyTable(self,window):
-        header = ['No','motor name','date']
-        hwidth = [100,300,100,100]
+        header = ['No','motor name','tempDE','tempNDE','vib-V','vib-H','vib-A','oil','date']
+        hwidth = [50,150,100,100,100,100,100,100,100]
         hisTable = ttk.Treeview(window,columns=header,show='headings',height=15)
         hisTable.pack()
         for hd,hw in zip(header,hwidth):
@@ -267,8 +267,8 @@ class App:
         self.headDraw()
         self.sectionSelect()
         self.bearingTemp()
+        self.historyTable(self.comFrame)
         self.menuBar()
-        self.historyTable(self.h5Frame)
         self.root.mainloop()
 
 
