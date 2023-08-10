@@ -7,12 +7,12 @@ pyautogui.FAILSAFE = True
 currentMouseX, currentMouseY = pyautogui.position()  
 print("X Cordinate is: ", currentMouseX)  
 print("Y Cordinate is: ", currentMouseY)
-pyautogui.FAILSAFE = True
 
-yStartPoint = 662 
+#-Set your Y-start point here
+yStartPoint = 566 
 
 #---INPUT HOW MANY OF YOUR ODERS HERE---#
-HowMany = 3  
+HowMany = 130 
 #--------------------------------------#
 
 def autoBot():
@@ -31,7 +31,7 @@ def autoBot():
             pyautogui.moveTo(905,519,duration=1)            #Move to the confimed button
             pyautogui.click(905,519,1,0.1,'left')           #click at the confirmed button
             time.sleep(1.5)                                 #wait seconds
-            print(f'The order no.{i+1} has been approved')              
+            print(f'The order no.{i+1} has been approved.')              
             #yStartPoint=yStartPoint -24
             i+=1
             
@@ -40,5 +40,5 @@ def autoBot():
             break
     t2 = time.time()      
     print(f'Done, Usage time: {(t2-t1):.2f}s.')
-           
+
 autoBot()
