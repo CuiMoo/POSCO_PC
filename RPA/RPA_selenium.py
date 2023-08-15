@@ -22,6 +22,8 @@ password.send_keys(Keys.RETURN)
 url = 'https://uncle-tools.com/admin/myapp/product/add/'
 driver.get(url)
 
+fruit = [['mango','20'],['coconut','35'],['durian','80']]
+
 name = driver.find_element(By.NAME,'name')
 name.send_keys('mango')
 
