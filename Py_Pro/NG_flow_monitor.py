@@ -1,0 +1,191 @@
+from tkinter import *
+from connect_plc import *
+import threading
+import time
+
+
+class Showdata:
+    def __init__(self) -> None:
+        self.root = Tk()
+        self.root.geometry('1400x150')
+        self.root.title('Utility Consumption Monitoring')
+        self.oPLC = utilityPLC()
+
+        self.V_NG_boiler_A_Flow = StringVar()
+        self.V_NG_boiler_B_Flow = StringVar()
+        self.V_N2_Flow = StringVar()
+        self.V_H2_Flow = StringVar()
+        self.V_FT_test = StringVar()
+
+        self.NG_boiler_A_Flow = 0
+        self.NG_boiler_B_Flow = 0
+        self.N2_Flow = 0
+        self.H2_Flow = 0
+        self.flow_test = 0
+
+        self.V_NG_boiler_A_FlowMeter = StringVar()
+        self.V_NG_boiler_B_FlowMeter = StringVar()
+        self.V_N2_FlowMeter = StringVar()
+        self.V_H2_FlowMeter = StringVar()
+        self.V_FT_testMeter = StringVar()
+
+        
+        self.NG1_sum = 0
+        self.NG2_sum = 0
+        self.N2_sum = 0
+        self.H2_sum =0
+        self.FT_test_sum = 0
+        
+
+        self.data = None
+
+        L1 = Label(self.root,text='NG BOILER A',font=(None,30,'bold'))
+        L1.grid(row=1,column=0,padx=20)
+        L2 = Label(self.root,textvariable=self.V_NG_boiler_A_Flow,font=(None,20))
+        L2.grid(row=2,column=0,padx=20)
+
+        L3 = Label(self.root,text='NG BOILER B',font=(None,30,'bold'))
+        L3.grid(row=1,column=1,padx=20)
+        L4 = Label(self.root,textvariable=self.V_NG_boiler_B_Flow,font=(None,20))
+        L4.grid(row=2,column=1,padx=20)
+
+        L5 = Label(self.root,text='N2 Flow',font=(None,30,'bold'))
+        L5.grid(row=1,column=2,padx=20)
+        L6 = Label(self.root,textvariable=self.V_N2_Flow,font=(None,20))
+        L6.grid(row=2,column=2,padx=20)
+
+        L7 = Label(self.root,text='H2 Flow',font=(None,30,'bold'))
+        L7.grid(row=1,column=3,padx=20)
+        L8 = Label(self.root,textvariable=self.V_H2_Flow,font=(None,20))
+        L8.grid(row=2,column=3,padx=20)
+
+        L9 = Label(self.root,text='Test Flow',font=(None,30,'bold'))
+        L9.grid(row=1,column=4,padx=20)
+        L10 = Label(self.root,textvariable=self.V_FT_test,font=(None,20))
+        L10.grid(row=2,column=4,padx=20)
+
+        L11 = Label(self.root,textvariable=self.V_NG_boiler_A_FlowMeter,font=(None,20))
+        L11.grid(row=3,column=0,padx=20)
+
+        L12 = Label(self.root,textvariable=self.V_NG_boiler_B_FlowMeter,font=(None,20))
+        L12.grid(row=3,column=1,padx=20)
+
+        L13 = Label(self.root,textvariable=self.V_N2_FlowMeter,font=(None,20))
+        L13.grid(row=3,column=2,padx=20)
+
+        L13 = Label(self.root,textvariable=self.V_H2_FlowMeter,font=(None,20))
+        L13.grid(row=3,column=3,padx=20)
+
+        L13 = Label(self.root,textvariable=self.V_FT_testMeter,font=(None,20))
+        L13.grid(row=3,column=4,padx=20)
+
+            
+
+    def dataGetUpdate(self):
+
+        while True:
+
+            self.V_NG_boiler_A_Flow.set(f'{self.NG1_sum:.3f} nm3')
+            self.V_NG_boiler_B_Flow.set(f'{self.NG2_sum:.3f} nm3')
+            self.V_N2_Flow.set(f'{self.N2_sum:.3f} nm3')
+            self.V_H2_Flow.set(f'{self.H2_sum:.3f} nm3')
+            self.V_FT_test.set(f'{self.FT_test_sum:.3f} nm3')
+
+            self.V_NG_boiler_A_FlowMeter.set(f'{self.NG_boiler_A_Flow:.3f} nm3/hr')
+            self.V_NG_boiler_B_FlowMeter.set(f'{self.NG_boiler_B_Flow:.3f} nm3/hr')
+            self.V_N2_FlowMeter.set(f'{self.N2_Flow:.3f} nm3/hr')
+            self.V_H2_FlowMeter.set(f'{self.H2_Flow:.3f} nm3/hr')
+            self.V_FT_testMeter.set(f'{self.flow_test:.3f} nm3/hr')
+            time.sleep(1)
+
+    def flowSum(self):
+        
+        N2_sum1 = 0
+        N2_sum2 = 0
+
+        NG1_sum1 =0
+        NG1_sum2 = 0
+
+        NG2_sum1 = 0
+        NG2_sum2 = 0
+
+        H2_sum1 = 0
+        H2_sum2 = 0
+
+        FT_sum1 = 0
+        FT_sum2 = 0
+        dt = 0.1
+        while True:
+            t1 = time.time()
+            data = self.oPLC.dataCollect()
+            self.NG_boiler_A_Flow = data[0]
+            self.NG_boiler_B_Flow = data[1]
+            self.N2_Flow = data[2]
+            self.H2_Flow = data[3]
+            self.flow_test = 60
+
+            #
+            # deltaFlow in 100ms
+            dNG1 = self.NG_boiler_A_Flow/(3600/dt) 
+            dNG2 = self.NG_boiler_B_Flow/(3600/dt)
+            dN2 = self.N2_Flow/(3600/dt)
+            dH2 = self.H2_Flow/(3600/dt)
+            dFt = self.flow_test/(3600/dt)
+
+            NG1_sum1 = NG1_sum1 + dNG1
+            NG2_sum1 = NG2_sum1 + dNG2
+            N2_sum1 = N2_sum1 + dN2
+            H2_sum1 = H2_sum1 + dH2
+            FT_sum1 = FT_sum1 + dFt
+
+            if NG1_sum1 >=1:
+                NG1_sum2 +=1
+                NG1_sum1 -=1
+
+            if NG2_sum1 >=1:
+                NG2_sum2 +=1
+                NG2_sum1 -=1
+
+            if N2_sum1>=1:
+                N2_sum2 +=1
+                N2_sum1 -=1
+
+            if H2_sum1>=1:
+                H2_sum2 +=1
+                H2_sum1 -=1
+
+            if FT_sum1>=1:
+                FT_sum2+=1
+                FT_sum1-=1
+                
+            
+            self.NG1_sum = NG1_sum1 + NG1_sum2
+            self.NG2_sum = NG2_sum1 + NG2_sum2
+            self.N2_sum = N2_sum1 + N2_sum2
+            self.H2_sum = H2_sum1 + H2_sum2
+            self.FT_test_sum = FT_sum1 + FT_sum2
+
+            #print(f'NG1 Flow: {self.NG1_sum:.3f} NG2 Flow: {self.NG2_sum:.3f} N2 Flow: {self.N2_sum:.3f} H2 Flow: {self.H2_sum:.3f} FT test {FT_test:.3f}')
+            
+
+            t2 = time.time()
+            dt = t2-t1
+            
+            
+
+    def scanTime(self):
+        task1  = threading.Thread(target=self.flowSum)
+        task2 = threading.Thread(target=self.dataGetUpdate)
+        
+        task1.start()
+        task2.start()
+        self.root.mainloop()
+
+           
+            
+                
+
+
+if __name__ == '__main__':
+    appRun = Showdata()
+    start = appRun.scanTime()
