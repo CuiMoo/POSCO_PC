@@ -1,7 +1,10 @@
 from tkinter import *
 from connect_plc import *
+from datetime import datetime
 import threading
 import time
+
+
 
 
 class Showdata:
@@ -82,20 +85,64 @@ class Showdata:
             
 
     def dataGetUpdate(self):
+        boiler_A_Flow_T1 = self.NG1_sum
+        boiler_B_Flow_T1 = self.NG2_sum
+        N2_Flow_T1 = self.N2_sum
+        H2_Flow_T1 = self.H2_sum
+        Test_Flow_T1 = self.FT_test_sum
+
+        T1 = datetime.now().strftime('%H:%M:%S')
+        print(f'Time: {T1}')
 
         while True:
 
-            self.V_NG_boiler_A_Flow.set(f'{self.NG1_sum:.3f} nm3')
-            self.V_NG_boiler_B_Flow.set(f'{self.NG2_sum:.3f} nm3')
-            self.V_N2_Flow.set(f'{self.N2_sum:.3f} nm3')
-            self.V_H2_Flow.set(f'{self.H2_sum:.3f} nm3')
-            self.V_FT_test.set(f'{self.FT_test_sum:.3f} nm3')
+            self.V_NG_boiler_A_Flow.set(f'{self.NG1_sum:.3f} Nm3')
+            self.V_NG_boiler_B_Flow.set(f'{self.NG2_sum:.3f} Nm3')
+            self.V_N2_Flow.set(f'{self.N2_sum:.3f} Nm3')
+            self.V_H2_Flow.set(f'{self.H2_sum:.3f} Nm3')
+            self.V_FT_test.set(f'{self.FT_test_sum:.3f} Nm3')
 
-            self.V_NG_boiler_A_FlowMeter.set(f'{self.NG_boiler_A_Flow:.3f} nm3/hr')
-            self.V_NG_boiler_B_FlowMeter.set(f'{self.NG_boiler_B_Flow:.3f} nm3/hr')
-            self.V_N2_FlowMeter.set(f'{self.N2_Flow:.3f} nm3/hr')
-            self.V_H2_FlowMeter.set(f'{self.H2_Flow:.3f} nm3/hr')
-            self.V_FT_testMeter.set(f'{self.flow_test:.3f} nm3/hr')
+            self.V_NG_boiler_A_FlowMeter.set(f'{self.NG_boiler_A_Flow:.3f} Nm3/hr')
+            self.V_NG_boiler_B_FlowMeter.set(f'{self.NG_boiler_B_Flow:.3f} Nm3/hr')
+            self.V_N2_FlowMeter.set(f'{self.N2_Flow:.3f} Nm3/hr')
+            self.V_H2_FlowMeter.set(f'{self.H2_Flow:.3f} Nm3/hr')
+            self.V_FT_testMeter.set(f'{self.flow_test:.3f} Nm3/hr')
+
+            Tnow = datetime.now().strftime('%Y %m %d %H %M %S').split(' ')
+            Tr = datetime.now().strftime('%H:%M')
+        
+
+            if Tnow[4]  == '00'  and Tnow[5] == '00':   
+                Boiler_A_Flow_rec = self.NG1_sum - boiler_A_Flow_T1
+                Boiler_B_Flow_rec = self.NG2_sum - boiler_B_Flow_T1
+                N2_Flow_rec = self.N2_sum - N2_Flow_T1
+                H2_flow_rec = self.H2_sum - H2_Flow_T1
+                test_flow_rec = self.FT_test_sum - Test_Flow_T1
+
+                print(f'Time:{Tnow} Test Flow rec: {test_flow_rec:.3f}\n\
+time:{Tnow} Boiler A: {Boiler_A_Flow_rec:.3f}\n\
+time:{Tnow} Boiler B: {Boiler_B_Flow_rec:.3f}\n\
+time:{Tnow} N2: {N2_Flow_rec:.3f}\n\
+time:{Tnow} H2: {H2_flow_rec:.3f}\n----------------')
+                
+                NG_A_Rec = round(Boiler_A_Flow_rec)
+                NG_B_Rec = round(Boiler_B_Flow_rec)
+                N2_Rec = round(N2_Flow_rec)
+                H2_Rec = round(H2_flow_rec)
+                test_Rec = round(test_flow_rec)
+
+
+                self.oPLC.writeToCSV((Tr,NG_A_Rec,NG_B_Rec,N2_Rec,
+                                      H2_Rec,test_Rec),Tnow)
+
+                boiler_A_Flow_T1 = self.NG1_sum
+                boiler_B_Flow_T1 = self.NG2_sum
+                N2_Flow_T1 = self.N2_sum
+                H2_Flow_T1= self.H2_sum
+                Test_Flow_T1 = self.FT_test_sum
+                print(f'Test flow:{Test_Flow_T1}\n---------')
+
+
             time.sleep(1)
 
     def flowSum(self):
@@ -103,7 +150,7 @@ class Showdata:
         N2_sum1 = 0
         N2_sum2 = 0
 
-        NG1_sum1 =0
+        NG1_sum1 = 0
         NG1_sum2 = 0
 
         NG2_sum1 = 0
@@ -125,7 +172,7 @@ class Showdata:
             self.flow_test = 60
 
             #
-            # deltaFlow in 100ms
+            # deltaFlow in cycle time 
             dNG1 = self.NG_boiler_A_Flow/(3600/dt) 
             dNG2 = self.NG_boiler_B_Flow/(3600/dt)
             dN2 = self.N2_Flow/(3600/dt)
@@ -165,25 +212,23 @@ class Showdata:
             self.H2_sum = H2_sum1 + H2_sum2
             self.FT_test_sum = FT_sum1 + FT_sum2
 
-            #print(f'NG1 Flow: {self.NG1_sum:.3f} NG2 Flow: {self.NG2_sum:.3f} N2 Flow: {self.N2_sum:.3f} H2 Flow: {self.H2_sum:.3f} FT test {FT_test:.3f}')
+            # print(f'NG1 Flow: {self.NG1_sum:.3f} NG2 Flow: {self.NG2_sum:.3f} N2 Flow: {self.N2_sum:.3f}\
+            # H2 Flow: {self.H2_sum:.3f} FT test {self.FT_test_sum:.3f}')
             
 
             t2 = time.time()
             dt = t2-t1
-            
-            
+    
+
 
     def scanTime(self):
-        task1  = threading.Thread(target=self.flowSum)
+        task1 = threading.Thread(target=self.flowSum)
         task2 = threading.Thread(target=self.dataGetUpdate)
+
         
         task1.start()
         task2.start()
         self.root.mainloop()
-
-           
-            
-                
 
 
 if __name__ == '__main__':

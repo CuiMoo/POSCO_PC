@@ -2,6 +2,9 @@
 import snap7
 from snap7 import util
 import time
+import csv
+import os
+
 
 UtilityIP = '192.168.10'
 RACK = 0
@@ -14,9 +17,8 @@ class utilityPLC:
         self.plc = snap7.client.Client()
         self.plc.connect(UtilityIP,RACK,MODULE)  # IP PLC set
         self.plc.get_connected()   #Connect
-        # self.boilerA_NG_flow = 0
-        # self.boilerB_NG_flow = 0
-        # self.airCom_flow = 0
+
+
 
     def dataCollect(self):
         boilerA_NG = self.plc.db_read(1037,112,4)               #DB1037.DBD112 GET READ
@@ -35,6 +37,25 @@ class utilityPLC:
 
         return (boilerA_NG_flow,boilerB_NG_flow,N2_Flow,H2_Flow)
     
+
+    
+    def writeToCSV(self,data,Date):
+        Year = Date[0]
+        Month = Date[1]
+        Day = Date[2]
+        Hr = Date[3]
+        Min = Date[4]
+        Sec = Date[5]
+
+        filename = f'{Day}'
+
+        with open(filename,'a',newline='',encoding='utf-8') as file:
+            fw = csv.writer(file) # fw = file writer
+            fw.writerow(data)
+
+    def mkDir(self):
+        pass
+
 
     
 if __name__ == '__main__':
