@@ -44,19 +44,52 @@ class utilityPLC:
         Month = Date[1]
         Day = Date[2]
         Hr = Date[3]
-        Min = Date[4]
-        Sec = Date[5]
+        
 
-        filename = f'{Day}'
+        fileName = self.mkDir(Year,Month,Day,Hr)
 
-        with open(filename,'a',newline='',encoding='utf-8') as file:
+        #Insert or create CSV file 
+        with open(fileName,'a',newline='',encoding='utf-8') as file:
             fw = csv.writer(file) # fw = file writer
             fw.writerow(data)
-
-    def mkDir(self):
-        pass
+            print(f'recorded at {Month},{Day},Hr:{Hr}')
 
 
+    def mkDir(self,Y,M,D,H):
+        folderName = 'C:/Utility Record'
+        dir_list = os.listdir(folderName)
+
+        if str(Y) not in dir_list:
+            pathF = os.path.join(folderName,str(Y))
+            os.mkdir(pathF)
+
+        path_Y = folderName + '/' + str(Y)
+        dir_list_Y = os.listdir(path_Y)
+
+        header = ('Time','NG-1','NG-2','N2','H2','Test(60)')
+
+        if str(M) not in dir_list_Y:
+            pathFM = os.path.join(path_Y,str(M))
+            os.mkdir(pathFM)
+
+            path_M1 = path_Y + '/' + str(M) + '/' + str(D) +'.csv'
+            
+            #Add the header into the first column of the file.
+            with open(path_M1,'a',newline='',encoding='utf-8') as file:
+                fw = csv.writer(file) # fw = file writer
+                fw.writerow(header)
+                
+                
+        path_M = path_Y + '/' + str(M) + '/' + str(D) +'.csv'
+
+        if H == '00' :
+            with open(path_M,'a',newline='',encoding='utf-8') as file:
+                fw = csv.writer(file) # fw = file writer
+                fw.writerow(header)
+
+
+        return path_M
+                    
     
 if __name__ == '__main__':
     oRun = utilityPLC()

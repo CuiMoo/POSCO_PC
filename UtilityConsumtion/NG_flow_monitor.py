@@ -5,8 +5,6 @@ import threading
 import time
 
 
-
-
 class Showdata:
     def __init__(self) -> None:
         self.root = Tk()
@@ -112,18 +110,18 @@ class Showdata:
             Tr = datetime.now().strftime('%H:%M')
         
 
-            if Tnow[4]  == '00'  and Tnow[5] == '00':   
+            if Tnow[4]  == '00'  and Tnow[5] == '00': #int(Tnow[4])%1 == 0 and int(Tnow[5]) == 0:  
                 Boiler_A_Flow_rec = self.NG1_sum - boiler_A_Flow_T1
                 Boiler_B_Flow_rec = self.NG2_sum - boiler_B_Flow_T1
                 N2_Flow_rec = self.N2_sum - N2_Flow_T1
                 H2_flow_rec = self.H2_sum - H2_Flow_T1
                 test_flow_rec = self.FT_test_sum - Test_Flow_T1
 
-                print(f'Time:{Tnow} Test Flow rec: {test_flow_rec:.3f}\n\
-time:{Tnow} Boiler A: {Boiler_A_Flow_rec:.3f}\n\
-time:{Tnow} Boiler B: {Boiler_B_Flow_rec:.3f}\n\
-time:{Tnow} N2: {N2_Flow_rec:.3f}\n\
-time:{Tnow} H2: {H2_flow_rec:.3f}\n----------------')
+#                 print(f'Time:{Tnow} Test Flow rec: {test_flow_rec:.3f}\n\
+# time:{Tnow} Boiler A: {Boiler_A_Flow_rec:.3f}\n\
+# time:{Tnow} Boiler B: {Boiler_B_Flow_rec:.3f}\n\
+# time:{Tnow} N2: {N2_Flow_rec:.3f}\n\
+# time:{Tnow} H2: {H2_flow_rec:.3f}\n----------------')
                 
                 NG_A_Rec = round(Boiler_A_Flow_rec)
                 NG_B_Rec = round(Boiler_B_Flow_rec)
@@ -140,7 +138,17 @@ time:{Tnow} H2: {H2_flow_rec:.3f}\n----------------')
                 N2_Flow_T1 = self.N2_sum
                 H2_Flow_T1= self.H2_sum
                 Test_Flow_T1 = self.FT_test_sum
-                print(f'Test flow:{Test_Flow_T1}\n---------')
+
+                #automatic monthly reset for clear data
+                if Tnow[2] == '01' and Tnow[3] == '00' and Tnow[4] == '00' and Tnow[5] == '00':
+                    self.NG1_sum = 0
+                    self.NG2_sum = 0
+                    self.N2_sum = 0
+                    self.H2_sum = 0
+                    self.FT_test_sum = 0
+
+
+
 
 
             time.sleep(1)
