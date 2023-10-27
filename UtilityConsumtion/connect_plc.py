@@ -1,4 +1,3 @@
-
 import snap7
 from snap7 import util
 import time
@@ -6,7 +5,7 @@ import csv
 import os
 
 
-UtilityIP = '192.168.10'
+UtilityIP = '192.168.10'   
 RACK = 0
 MODULE = 3
 
@@ -14,11 +13,12 @@ MODULE = 3
 
 class utilityPLC:
     def __init__(self) -> None:
-        self.plc = snap7.client.Client()
-        self.plc.connect(UtilityIP,RACK,MODULE)  # IP PLC set
-        self.plc.get_connected()   #Connect
-
-
+        try:
+            self.plc = snap7.client.Client()
+            self.plc.connect(UtilityIP,RACK,MODULE)  # IP PLC set
+            self.plc.get_connected()   #Connect
+        except:
+            pass
 
     def dataCollect(self):
         boilerA_NG = self.plc.db_read(1037,112,4)               #DB1037.DBD112 GET READ
@@ -26,16 +26,20 @@ class utilityPLC:
 
         boilerB_NG = self.plc.db_read(1038,112,4)               #DB1038.DBD112 GET READ
         boilerB_NG_flow  = util.get_real(boilerB_NG,0)          #BOILER B NG FLOW
-       
 
-        N2 = self.plc.db_read(1003,15000,4)
-        N2_Flow = util.get_real(N2,0)
+        furNG = self.plc.db_read(1003,1600,4)                   #DB1003.DBD1600 Get read                              
+        furNG_flow = util.get_real(furNG,0)                     #Furnace Flow
+               
 
-        H2 = self.plc.db_read(1003,15100,4)
-        H2_Flow = util.get_real(H2,0)
+        N2 = self.plc.db_read(1003,15000,4)                     #DB1003.DBD15000 GET READ
+        N2_Flow = util.get_real(N2,0)                           #N2 FLOW
+
+        H2 = self.plc.db_read(1003,15100,4)                     #DB1003.DBD112 GET READ
+        H2_Flow = util.get_real(H2,0)                           #H2 FLOW
 
 
-        return (boilerA_NG_flow,boilerB_NG_flow,N2_Flow,H2_Flow)
+
+        return (boilerA_NG_flow,boilerB_NG_flow,furNG_flow,N2_Flow,H2_Flow)
     
 
     
@@ -52,22 +56,30 @@ class utilityPLC:
         with open(fileName,'a',newline='',encoding='utf-8') as file:
             fw = csv.writer(file) # fw = file writer
             fw.writerow(data)
-            print(f'recorded at {Month},{Day},Hr:{Hr}')
+            print(f'recorded at {Month}/{Day}, Hr:{Hr}')
 
 
     def mkDir(self,Y,M,D,H):
         folderName = 'C:/Utility Record'
         dir_list = os.listdir(folderName)
+        header = ('Date','Time','NG-1','NG-2','Fce-NG','N2','H2','Test(60)')
 
         if str(Y) not in dir_list:
             pathF = os.path.join(folderName,str(Y))
             os.mkdir(pathF)
-
+            path_Y = folderName + '/' + str(Y)
+            path = path_Y+'/'+str(M)+'.csv'
+            
+            with open(path,'a',newline='',encoding='utf-8') as file:
+                fw = csv.writer(file) # fw = file writer
+                fw.writerow(header)
+                
         path_Y = folderName + '/' + str(Y)
+        path = path_Y+'/'+str(M)+'.csv'
+
+        #Create separated folders by Y-M-D
+        """
         dir_list_Y = os.listdir(path_Y)
-
-        header = ('Time','NG-1','NG-2','N2','H2','Test(60)')
-
         if str(M) not in dir_list_Y:
             pathFM = os.path.join(path_Y,str(M))
             os.mkdir(pathFM)
@@ -81,14 +93,13 @@ class utilityPLC:
                 
                 
         path_M = path_Y + '/' + str(M) + '/' + str(D) +'.csv'
-
-        if H == '00' :
-            with open(path_M,'a',newline='',encoding='utf-8') as file:
+        """
+        if D == '01' and H =='00' :
+            with open(path,'a',newline='',encoding='utf-8') as file:
                 fw = csv.writer(file) # fw = file writer
                 fw.writerow(header)
 
-
-        return path_M
+        return path
                     
     
 if __name__ == '__main__':

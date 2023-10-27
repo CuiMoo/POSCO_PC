@@ -1,11 +1,22 @@
-import snap7
-from snap7 import util
-import time
+# Import required libraries
+from tkinter import *
+from PIL import ImageTk, Image
 
+# Create an instance of tkinter window
+win = Tk()
 
-plc = snap7.client.Client()
-plc.connect('192.168.10',0,3)
-plc.get_connected()
-print(plc.get_connected())
+# Define the geometry of the window
+win.geometry("700x500")
 
-db1037 = snap7.util.DB(1037,bytearray(8))
+frame = Frame(win, width=600, height=400)
+frame.pack()
+frame.place(anchor='center', relx=0.5, rely=0.5)
+
+# Create an object of tkinter ImageTk
+img = ImageTk.PhotoImage(Image.open("posco_logo.png"))
+
+# Create a Label Widget to display the text or Image
+label = Label(frame, image = img)
+label.pack()
+
+win.mainloop()
