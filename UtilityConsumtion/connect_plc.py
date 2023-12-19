@@ -3,15 +3,16 @@ from snap7 import util
 import time
 import csv
 import os
+import pandas as pd
 
 
-UtilityIP = '192.168.10'   
+UtilityIP = '192.168.0.10'   
 RACK = 0
 MODULE = 3
 
 
 
-class utilityPLC:
+class UtilityPLC:
     def __init__(self) -> None:
         try:
             self.plc = snap7.client.Client()
@@ -39,7 +40,7 @@ class utilityPLC:
 
 
 
-        return (boilerA_NG_flow,boilerB_NG_flow,furNG_flow,N2_Flow,H2_Flow)
+        return boilerA_NG_flow,boilerB_NG_flow,furNG_flow,N2_Flow,H2_Flow
     
 
     
@@ -50,17 +51,23 @@ class utilityPLC:
         Hr = Date[3]
         
 
-        fileName = self.mkDir(Year,Month,Day,Hr)
+        fileName1 = self.mkDir(Year,Month,Day,Hr)
+        fileName2 = fileName1+ '.csv'
 
         #Insert or create CSV file 
-        with open(fileName,'a',newline='',encoding='utf-8') as file:
+        with open(fileName2,'a',newline='',encoding='utf-8') as file:
             fw = csv.writer(file) # fw = file writer
             fw.writerow(data)
-            print(f'recorded at {Month}/{Day}, Hr:{Hr}')
+            # print(f'recorded at {Month}/{Day}, Hr:{Hr}')
+        try:
+            self.csvToExcel(fileName1)
+        except:
+            print('the exel file is openned!')
 
 
     def mkDir(self,Y,M,D,H):
         folderName = 'C:/Utility Record'
+        #folderName = 'C:/test1'
         dir_list = os.listdir(folderName)
         header = ('Date','Time','NG-1','NG-2','Fce-NG','N2','H2','Test(60)')
 
@@ -75,7 +82,7 @@ class utilityPLC:
                 fw.writerow(header)
                 
         path_Y = folderName + '/' + str(Y)
-        path = path_Y+'/'+str(M)+'.csv'
+        path = path_Y+'/'+str(M)
 
         #Create separated folders by Y-M-D
         """
@@ -95,15 +102,22 @@ class utilityPLC:
         path_M = path_Y + '/' + str(M) + '/' + str(D) +'.csv'
         """
         if D == '01' and H =='00' :
-            with open(path,'a',newline='',encoding='utf-8') as file:
+            with open((path+'.csv'),'a',newline='',encoding='utf-8') as file:
                 fw = csv.writer(file) # fw = file writer
                 fw.writerow(header)
 
         return path
                     
+
+    def csvToExcel(self,FileName):
+        cFile = FileName + '.csv'
+        df = pd.read_csv(cFile)
+        xFile = FileName+'.xlsx'
+        df.to_excel(xFile,sheet_name='consumption',index=False)
+
     
 if __name__ == '__main__':
-    oRun = utilityPLC()
+    oRun = UtilityPLC()
 
     while True:
         dataShow = oRun.dataCollect()

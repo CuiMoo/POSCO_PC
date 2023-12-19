@@ -5,21 +5,25 @@ import threading
 import time
 
 
+
 class Showdata:
     def __init__(self) -> None:
+        # UI configuration
         self.root = Tk()
-        self.root.geometry('1600x300')
-        self.root.title('POSCO-TCS Consumption Monitoring')
+        self.root.geometry('1800x300')
+        self.root.title('POSCO-TCS Utility Consumption Monitoring')
         self.root.iconbitmap('Computer.ico')
+        self.root.config(bg='black')
         
+        back_ground = 'black'
         font = 'Tahoma'
-        head_color = '#3333cc'
+        head_color = 'yellow'
         flow_title_color = 'green'
-        flow_sum_color = 'blue'
+        flow_sum_color = 'orange'
         flow_meter_color ='red'
 
 
-        self.oPLC = utilityPLC()
+        self.oPLC = UtilityPLC()
 
         self.V_NG_boiler_A_Flow = StringVar()
         self.V_NG_boiler_B_Flow = StringVar()
@@ -54,78 +58,81 @@ class Showdata:
         self.N2_sum = 0
         self.H2_sum = 0
         self.FT_test_sum = 0
+
+
         
 
         self.data = None
         self.Fce_Flow_Cal = 0
+        self.Tnow = None
 
-        self.Header = Frame(self.root,width=1600,height=100)
+        self.Header = Frame(self.root,width=1600,height=100,bg=back_ground)
         self.Header.pack()
 
-        L = Label(self.Header,text='CONSUMPTION MONITORING',font=(font,35,'bold'),fg=head_color,bg='yellow')
+        L = Label(self.Header,text='POSCO-TCS CONSUMPTION MONITORING',font=(font,35,'bold'),fg=head_color,bg=back_ground)
         L.pack(pady=20)
 
-        self.detail = Frame(self.root,width=1600,height=150)
+        self.detail = Frame(self.root,width=1600,height=150,background=back_ground)
         self.detail.pack()
         #---NG Boiler A---
-        L1 = Label(self.detail,text='NG BOILER:A',font=(font,30,'bold'),fg=flow_title_color)
+        L1 = Label(self.detail,text='NG BOILER:A',font=(font,30,'bold'),fg=flow_title_color,bg=back_ground)
         L1.grid(row=1,column=0,padx=20)
-        L2 = Label(self.detail,textvariable=self.V_NG_boiler_A_Flow,font=(font,20),fg=flow_sum_color)
+        L2 = Label(self.detail,textvariable=self.V_NG_boiler_A_Flow,font=(font,20),fg=flow_sum_color,bg=back_ground)
         L2.grid(row=2,column=0,padx=20)
 
         #---NG Boiler B---
-        L3 = Label(self.detail,text='NG BOILER:B',font=(font,30,'bold'),fg=flow_title_color)
+        L3 = Label(self.detail,text='NG BOILER:B',font=(font,30,'bold'),fg=flow_title_color,bg=back_ground)
         L3.grid(row=1,column=1,padx=20)
-        L4 = Label(self.detail,textvariable=self.V_NG_boiler_B_Flow,font=(font,20),fg=flow_sum_color)
+        L4 = Label(self.detail,textvariable=self.V_NG_boiler_B_Flow,font=(font,20),fg=flow_sum_color,bg=back_ground)
         L4.grid(row=2,column=1,padx=20)
 
         #---F'ce Flow---
-        L5 = Label(self.detail,text="NG-F'ce Flow",font=(font,30,'bold'),fg=flow_title_color)
+        L5 = Label(self.detail,text="NG-F'ce Flow",font=(font,30,'bold'),fg=flow_title_color,bg=back_ground)
         L5.grid(row=1,column=2,padx=20)
-        L6 = Label(self.detail,textvariable=self.V_Fce_Flow,font=(font,20),fg=flow_sum_color)
+        L6 = Label(self.detail,textvariable=self.V_Fce_Flow,font=(font,20),fg=flow_sum_color,bg=back_ground)
         L6.grid(row=2,column=2,padx=20)
 
         #---N2 Flow---
-        L7 = Label(self.detail,text='N2 Flow',font=(font,30,'bold'),fg=flow_title_color)
+        L7 = Label(self.detail,text='N2 Flow',font=(font,30,'bold'),fg=flow_title_color,bg=back_ground)
         L7.grid(row=1,column=3,padx=20)
-        L8 = Label(self.detail,textvariable=self.V_N2_Flow,font=(font,20),fg=flow_sum_color)
+        L8 = Label(self.detail,textvariable=self.V_N2_Flow,font=(font,20),fg=flow_sum_color,bg=back_ground)
         L8.grid(row=2,column=3,padx=20)
 
         #---H2 Flow---       
-        L9 = Label(self.detail,text='H2 Flow',font=(font,30,'bold'),fg=flow_title_color)
+        L9 = Label(self.detail,text='H2 Flow',font=(font,30,'bold'),fg=flow_title_color,bg=back_ground)
         L9.grid(row=1,column=4,padx=20)
-        L10 = Label(self.detail,textvariable=self.V_H2_Flow,font=(font,20),fg=flow_sum_color)
+        L10 = Label(self.detail,textvariable=self.V_H2_Flow,font=(font,20),fg=flow_sum_color,bg=back_ground)
         L10.grid(row=2,column=4,padx=20)
 
         #---Test Flow---
-        L11 = Label(self.detail,text='Ref. Flow',font=(None,30,'bold'),fg=flow_title_color)
+        L11 = Label(self.detail,text='Ref. Flow',font=(None,30,'bold'),fg=flow_title_color,bg=back_ground)
         L11.grid(row=1,column=5,padx=20)
-        L12 = Label(self.detail,textvariable=self.V_FT_test,font=(None,20),fg=flow_sum_color)
+        L12 = Label(self.detail,textvariable=self.V_FT_test,font=(None,20),fg=flow_sum_color,bg=back_ground)
         L12.grid(row=2,column=5,padx=20)
 
 
         #---NG Boiler A Flow meter---
-        L13 = Label(self.detail,textvariable=self.V_NG_boiler_A_FlowMeter,font=(font,20),fg=flow_meter_color)
+        L13 = Label(self.detail,textvariable=self.V_NG_boiler_A_FlowMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L13.grid(row=3,column=0,padx=20)
 
         #---NG Boiler B Flow meter---
-        L14 = Label(self.detail,textvariable=self.V_NG_boiler_B_FlowMeter,font=(font,20),fg=flow_meter_color)
+        L14 = Label(self.detail,textvariable=self.V_NG_boiler_B_FlowMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L14.grid(row=3,column=1,padx=20)
 
         #---Fce Flow meter---
-        L15 = Label(self.detail,textvariable=self.V_Fce_FlowMeter,font=(font,20),fg=flow_meter_color)
+        L15 = Label(self.detail,textvariable=self.V_Fce_FlowMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L15.grid(row=3,column=2,padx=20)
 
         #---N2 meter---
-        L16 = Label(self.detail,textvariable=self.V_N2_FlowMeter,font=(font,20),fg=flow_meter_color)
+        L16 = Label(self.detail,textvariable=self.V_N2_FlowMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L16.grid(row=3,column=3,padx=20)
 
         #---H2 meter---
-        L17 = Label(self.detail,textvariable=self.V_H2_FlowMeter,font=(font,20),fg=flow_meter_color)
+        L17 = Label(self.detail,textvariable=self.V_H2_FlowMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L17.grid(row=3,column=4,padx=20)
 
         #---Flow Ref. at 60--
-        L18 = Label(self.detail,textvariable=self.V_FT_testMeter,font=(font,20),fg=flow_meter_color)
+        L18 = Label(self.detail,textvariable=self.V_FT_testMeter,font=(font,20),fg=flow_meter_color,bg=back_ground)
         L18.grid(row=3,column=5,padx=20)
 
 
@@ -144,12 +151,12 @@ class Showdata:
 
         while True:
 
-            self.V_NG_boiler_A_Flow.set(f'{self.NG1_sum:.0f} Nm3')
-            self.V_NG_boiler_B_Flow.set(f'{self.NG2_sum:.0f} Nm3')
-            self.V_Fce_Flow.set(f'{self.Fce_sum:.0f} Nm3')
-            self.V_N2_Flow.set(f'{self.N2_sum:.0f} Nm3')
-            self.V_H2_Flow.set(f'{self.H2_sum:.0f} Nm3')
-            self.V_FT_test.set(f'{self.FT_test_sum:.0f} Nm3')
+            self.V_NG_boiler_A_Flow.set(f'{self.NG1_sum:.1f} Nm3')
+            self.V_NG_boiler_B_Flow.set(f'{self.NG2_sum:.1f} Nm3')
+            self.V_Fce_Flow.set(f'{self.Fce_sum:.1f} Nm3')
+            self.V_N2_Flow.set(f'{self.N2_sum:.1f} Nm3')
+            self.V_H2_Flow.set(f'{self.H2_sum:.1f} Nm3')
+            self.V_FT_test.set(f'{self.FT_test_sum:.1f} Nm3')
 
             self.V_NG_boiler_A_FlowMeter.set(f'{self.NG_boiler_A_Flow:.1f} Nm3/hr')
             self.V_NG_boiler_B_FlowMeter.set(f'{self.NG_boiler_B_Flow:.1f} Nm3/hr')
@@ -159,13 +166,13 @@ class Showdata:
             self.V_FT_testMeter.set(f'{self.flow_test:.1f} Nm3/hr')
 
 
-
-            Tnow = datetime.now().strftime('%Y %m %d %H %M %S').split(' ')
-            Tr = f'{Tnow[3]}:{Tnow[4]}'      
-            date = f'{Tnow[1]}/{Tnow[2]}'    
+     
+            self.Tnow = datetime.now().strftime('%Y %m %d %H %M %S').split(' ')
+            Tr = f'{self.Tnow[3]}:{self.Tnow[4]}'      
+            date = f'{self.Tnow[1]}/{self.Tnow[2]}'    
         
 
-            if Tnow[4]  == '00'  and Tnow[5] == '00': #int(Tnow[4])%1 == 0 and int(Tnow[5]) == 0: | Tnow[4]  == '00'  and Tnow[5] == '00': 
+            if self.Tnow[4]  == '00'  and self.Tnow[5] == '00': #int(Tnow[4])%1 == 0 and int(Tnow[5]) == 0: | Tnow[4]  == '00'  and Tnow[5] == '00':
                 Boiler_A_Flow_rec = self.NG1_sum - boiler_A_Flow_T1
                 Boiler_B_Flow_rec = self.NG2_sum - boiler_B_Flow_T1
                 Fce_Flow_rec = self.Fce_sum - Fce_Flow_T1
@@ -183,7 +190,7 @@ class Showdata:
 
 
                 self.oPLC.writeToCSV((date,Tr,NG_A_Rec,NG_B_Rec,Fce_Rec,N2_Rec,
-                                      H2_Rec,test_Rec),Tnow)
+                                      H2_Rec,test_Rec),self.Tnow)
 
                 boiler_A_Flow_T1 = self.NG1_sum
                 boiler_B_Flow_T1 = self.NG2_sum
@@ -192,14 +199,7 @@ class Showdata:
                 H2_Flow_T1= self.H2_sum
                 Test_Flow_T1 = self.FT_test_sum
 
-                #automatic monthly reset for memory optimization
-                if Tnow[2] == '01' and Tnow[3] == '00' and Tnow[4] == '00' and Tnow[5] == '00':
-                    self.NG1_sum = 0
-                    self.NG2_sum = 0
-                    self.Fce_sum =0
-                    self.N2_sum = 0
-                    self.H2_sum = 0
-                    self.FT_test_sum = 0
+                
 
             time.sleep(1)
 
@@ -233,7 +233,7 @@ class Showdata:
                 self.flow_test = 60
             except:
                 data = (0,0,0,0,0)
-                self.oPLC = utilityPLC()  # Re-Connect
+                self.oPLC = UtilityPLC()  # Re-Connect
                 self.flow_test = 0
 
             self.NG_boiler_A_Flow = data[0]
@@ -248,16 +248,16 @@ class Showdata:
                 self.Fce_Flow_Cal = self.Fce_Flow - 6.0
 
             elif self.Fce_Flow >= 3000 and self.Fce_Flow < 3500 :
-                self.Fce_Flow_Cal = self.Fce_Flow -5.7871
+                self.Fce_Flow_Cal = self.Fce_Flow - 5.7871
 
             elif self.Fce_Flow >= 2000 and self.Fce_Flow < 3000:
-                self.Fce_Flow_Cal = self.Fce_Flow -4.6296
+                self.Fce_Flow_Cal = self.Fce_Flow - 4.6296
 
             elif self.Fce_Flow >= 500 and self.Fce_Flow < 2000:
-                self.Fce_Flow_Cal = self.Fce_Flow -3.4722
+                self.Fce_Flow_Cal = self.Fce_Flow - 3.4722
             
             else:
-                self.Fce_Flow_Cal = self.Fce_Flow -2.3148
+                self.Fce_Flow_Cal = self.Fce_Flow - 2.3148
 
                 if self.Fce_Flow_Cal < 0:
                     self.Fce_Flow_Cal = 0
@@ -280,7 +280,7 @@ class Showdata:
                 dH2 = 0
                 dFt = 0
 
-
+            ####Summation every cycle time#################
             NG1_sum1 = NG1_sum1 + dNG1
             NG2_sum1 = NG2_sum1 + dNG2
             Fce_sum1 = Fce_sum1 +dFce
@@ -313,17 +313,41 @@ class Showdata:
                 FT_sum2+=1
                 FT_sum1-=1
                             
-            
+            ###################################
             self.NG1_sum = NG1_sum1 + NG1_sum2
             self.NG2_sum = NG2_sum1 + NG2_sum2
             self.Fce_sum = Fce_sum1 + Fce_sum2
             self.N2_sum = N2_sum1 + N2_sum2
             self.H2_sum = H2_sum1 + H2_sum2
             self.FT_test_sum = FT_sum1 + FT_sum2
-      
+
+            if self.Tnow[2] == '01' and self.Tnow[3] == '00' and self.Tnow[4] == '00' and self.Tnow[5] == '00':
+                self.NG1_sum = 0
+                self.NG2_sum = 0
+                self.Fce_sum = 0
+                self.N2_sum = 0
+                self.H2_sum = 0
+                self.FT_test_sum = 0
+
+                NG1_sum1 = 0
+                NG2_sum1 = 0
+                Fce_sum1 = 0
+                N2_sum1 = 0
+                H2_sum1 = 0
+                FT_sum1 = 0
+
+                NG1_sum2 = 0
+                NG2_sum2 = 0
+                Fce_sum2 = 0
+                N2_sum2 = 0
+                H2_sum2 = 0
+                FT_sum2 = 0
+                
+                      
             t2 = time.time()
             dt = t2-t1
 
+#Threading program
     def scanTime(self):
         task1 = threading.Thread(target=self.flowSum)
         task2 = threading.Thread(target=self.dataGetUpdate)        
