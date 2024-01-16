@@ -9,10 +9,10 @@ print("X Cordinate is: ", currentMouseX)
 print("Y Cordinate is: ", currentMouseY)
 
 #-Set your Y-start point here
-yStartPoint = 566 
+yStartPoint = 568 
 
 #---INPUT HOW MANY OF YOUR ODERS HERE---#
-HowMany = 130 
+HowMany = 40
 #--------------------------------------#
 
 def autoBot():
@@ -23,16 +23,16 @@ def autoBot():
     
     while i<HowMany:
         try:
-            pyautogui.moveTo(904,yStartPoint,duration=2)    # Move to title
+            pyautogui.moveTo(904,yStartPoint,duration=1)    # Move to title
             pyautogui.click(904,yStartPoint,1,0.1,'left')   # Click at title
             pyautogui.moveTo(1471,155,duration=2)           # Move at the approve button
-            time.sleep(1.5)                                 #Wait seconds 
+            time.sleep(1)                                 #Wait seconds 
             pyautogui.click(1471,155,1,0.1,'left')          #click at the approve button
             pyautogui.moveTo(905,519,duration=1)            #Move to the confimed button
             pyautogui.click(905,519,1,0.1,'left')           #click at the confirmed button
-            time.sleep(1.5)                                 #wait seconds
+            time.sleep(1)                                 #wait seconds
             print(f'The order no.{i+1} has been approved.')              
-            #yStartPoint=yStartPoint -24
+            yStartPoint=yStartPoint -24
             i+=1
             
         except BaseException:
