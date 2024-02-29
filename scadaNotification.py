@@ -9,7 +9,7 @@ import threading
 SCADA_IP = '192.168.1.5'
 PORT = 2001
 COMTYPE = 'binary'
-Line_Token = 'HG24FTEBSGTcPAb4AnrEkPOLeAx5evRpYIrQ1vryiWj' #Moo's Token 
+Line_Token = 'xxxxx' # Token 
 
 
 class SCADA:
